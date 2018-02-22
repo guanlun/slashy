@@ -1,0 +1,14 @@
+{
+  "name": "slashy",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Guanlun Zhao",
+  "license": "ISC",
+  "dependencies": {
+    "konva": "^1.7.6"
+  }
+}
