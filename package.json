@@ -4,11 +4,17 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "http-server .",
+    "build": "webpack",
+    "watch": "webpack --watch"
   },
   "author": "Guanlun Zhao",
   "license": "ISC",
   "dependencies": {
     "konva": "^1.7.6"
+  },
+  "devDependencies": {
+    "http-server": "^0.11.1",
+    "webpack": "^3.11.0"
   }
 }
