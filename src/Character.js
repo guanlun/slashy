@@ -1,18 +1,5 @@
 import Action from './Action';
-
-// const ACTIONS = {
-//     idle: { loop: true, atomic: false },
-//     walk: { loop: true, atomic: false },
-//     attack: { loop: false, atomic: true },
-//     dead: { loop: false, atomic: true },
-// };
-
-const ACTIONS = [
-    'idle',
-    'walk',
-    'attack',
-    'dead',
-];
+import { loadCharacterSprites } from './SpriteLoader';
 
 export default class Character {
     constructor(name) {
@@ -28,24 +15,10 @@ export default class Character {
         this.movingDir = undefined;
     }
 
-    loadCharacter(spriteLoader) {
-        return spriteLoader.loadSprites(this.name).then(() => {
-            this.actions = spriteLoader.actions;
+    loadCharacter(characterSpec) {
+        return loadCharacterSprites(this.name, characterSpec).then(actions => {
+            this.actions = actions;
         });
-    }
-
-    _loadCharacter() {
-        return Promise.all(
-            ACTIONS.map(actionName => 
-                new Promise((resolve, reject) => {
-                    const action = new Action(this.name, actionName);
-                    action.loadSprite().then(() => {
-                        this.actions[actionName] = action;
-                        resolve();
-                    });
-                })
-            )
-        );
     }
 
     walkForward() {

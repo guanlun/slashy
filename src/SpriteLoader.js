@@ -1,24 +1,65 @@
 import Action from './Action';
 
-export default class SpriteLoader {
-    constructor(spriteSpec) {
-        this.spriteSpec = spriteSpec;
-        this.actions = [];
+const SPRITE_DIR = '../images/sprites';
+
+export function loadCharacterSprites(characterName, characterSpec) {
+    return Promise.all(
+        Object.keys(characterSpec).map(actionName => 
+            new Promise((resolve, reject) => {
+                const actionSpec = characterSpec[actionName];
+                
+                loadActionSprites(characterName, actionName, actionSpec).then(sprites => {
+                    resolve(new Action(characterName, actionName, actionSpec, sprites));
+                });
+            })
+        )
+    ).then(loadedActions => {
+        // convert loaded action array to object with action name as keys
+        const actionMap = {};
+        for (const action of loadedActions) {
+            actionMap[action.actionName] = action;
+        }
+
+        return actionMap;
+    });
+}
+
+function loadActionSprites(characterName, actionName, actionSpec) {
+    const action = new Action(characterName, actionName, actionSpec);
+    const baseName = actionName.charAt(0).toUpperCase() + actionName.slice(1);
+    const sprites = [];
+
+    for (let i = 0; i < actionSpec.length; i++) {
+        sprites.push({
+            action: actionName,
+            frameIdx: i,
+            filePath: `${SPRITE_DIR}/${characterName}/${baseName}/${baseName}_${leftPadZero3(i)}.png`,
+        });
     }
 
-    loadSprites(characterName) {
-        // console.log(this.spriteSpec)
-        return Promise.all(
-            Object.keys(this.spriteSpec).map(actionName => 
-                new Promise((resolve, reject) => {
-                    const actionSpec = this.spriteSpec[actionName];
-                    const action = new Action(characterName, actionName, actionSpec);
-                    action.loadSprite().then(() => {
-                        this.actions[actionName] = action;
-                        resolve();
-                    });
-                })
-            )
+    return Promise.all(
+        sprites.map(sprite => 
+            new Promise((resolve, reject) => {
+                const img = new Image();
+                img.onload = data => {
+                    sprite.img = img;
+                    resolve(sprite);
+                }
+                img.src = sprite.filePath;
+            })
         )
+    );
+}
+
+function leftPadZero3(num) {
+    const numStr = num + '';
+    if (numStr.length === 3) {
+        return numStr;
+    } else if (numStr.length === 2) {
+        return `0${numStr}`;
+    } else if (numStr.length === 1) {
+        return `00${numStr}`;
+    } else {
+        return numStr;
     }
 }
