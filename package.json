@@ -6,15 +6,18 @@
   "scripts": {
     "start": "http-server .",
     "build": "webpack",
-    "watch": "webpack --watch"
+    "watch": "webpack --watch",
+    "server": "nodemon server/index.js"
   },
   "author": "Guanlun Zhao",
   "license": "ISC",
   "dependencies": {
-    "konva": "^1.7.6"
+    "konva": "^1.7.6",
+    "ws": "^5.0.0"
   },
   "devDependencies": {
     "http-server": "^0.11.1",
+    "nodemon": "^1.17.1",
     "webpack": "^3.11.0"
   }
 }
