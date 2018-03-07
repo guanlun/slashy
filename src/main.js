@@ -1,11 +1,23 @@
 import Config from './config';
 import Renderer from './Renderer';
 import Character from './Character';
+import SpriteLoader from './SpriteLoader';
 
-const mainChar = new Character('main');
-mainChar.loadCharacter().then(() => {
+const ZOMBIE_ACTIONS = {
+    attacking: { length: 12 },
+    walking: { length: 18 },
+    idle: { length: 12 },
+};
+
+// const mainChar = new Character('main');
+// mainChar._loadCharacter().then(() => {
+//     window.requestAnimationFrame(renderScene);
+// });
+
+const zombie1 = new Character('zombie-1');
+zombie1.loadCharacter(new SpriteLoader(ZOMBIE_ACTIONS)).then(() => {
     window.requestAnimationFrame(renderScene);
-})
+});
 
 const canvas = document.getElementById('canvas');
 const ctx = canvas.getContext('2d');
@@ -14,8 +26,10 @@ function renderCharacter() {
     ctx.save();
     ctx.scale(0.3, 0.3);
 
-    mainChar.update();
-    mainChar.render(ctx);
+    // mainChar.update();
+    // mainChar.render(ctx);
+    zombie1.update();
+    zombie1.render(ctx);
 
     ctx.restore();
 }
@@ -53,3 +67,24 @@ document.addEventListener('keyup', evt => {
             break;
     }
 });
+
+const wsAddr = `ws://${Config.WS_SERVER_IP}:${Config.WS_SERVER_PORT}`;
+
+const wsConn = new WebSocket(wsAddr);
+wsConn.onopen = _ => {
+    console.log('connected to ws server');
+}
+
+const indicator = document.querySelector('#main')
+
+wsConn.onmessage = msg => {
+    console.log(msg)
+    if (msg.data === 'hack') {
+        // currAction = 'attack';
+        mainChar.attack();
+    }
+}
+
+wsConn.onerror = () => {
+    console.log('error')
+}

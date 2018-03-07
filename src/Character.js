@@ -15,8 +15,8 @@ const ACTIONS = [
 ];
 
 export default class Character {
-    constructor(id) {
-        this.id = id;
+    constructor(name) {
+        this.name = name;
         this.actions = {};
         this.currAction = undefined;
 
@@ -28,11 +28,17 @@ export default class Character {
         this.movingDir = undefined;
     }
 
-    loadCharacter() {
+    loadCharacter(spriteLoader) {
+        return spriteLoader.loadSprites(this.name).then(() => {
+            this.actions = spriteLoader.actions;
+        });
+    }
+
+    _loadCharacter() {
         return Promise.all(
             ACTIONS.map(actionName => 
                 new Promise((resolve, reject) => {
-                    const action = new Action(this.id, actionName);
+                    const action = new Action(this.name, actionName);
                     action.loadSprite().then(() => {
                         this.actions[actionName] = action;
                         resolve();
