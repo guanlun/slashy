@@ -1,45 +1,49 @@
 import Config from './config';
 import Renderer from './Renderer';
 import Character from './Character';
+import SceneManager from './SceneManager';
+import ZombieBehavior from './ZombieBehavior';
+import MainCharBehavior from './MainCharBehavior';
+import { loadCharacterSprites } from './SpriteLoader';
 
-const ZOMBIE_ACTIONS = {
+const BASIC_CHAR_ACTIONS = {
     attacking: { length: 12 },
     walking: { length: 18 },
     idle: { length: 12 },
 };
 
-// const mainChar = new Character('main');
-// mainChar._loadCharacter().then(() => {
-//     window.requestAnimationFrame(renderScene);
-// });
+const CHARACTERS = {
+    'main': {
+        actionSpec: BASIC_CHAR_ACTIONS,
+    },
+    'zombie-1': {
+        actionSpec: BASIC_CHAR_ACTIONS
+    },
+    'zombie-2': {
+        actionSpec: BASIC_CHAR_ACTIONS
+    },
+    'zombie-3': {
+        actionSpec: BASIC_CHAR_ACTIONS
+    },
+};
 
-const zombie1 = new Character('zombie-1');
-zombie1.loadCharacter(ZOMBIE_ACTIONS).then(() => {
-    window.requestAnimationFrame(renderScene);
+Promise.all(
+    Object.keys(CHARACTERS).map(
+        name => loadCharacterSprites(name, CHARACTERS[name].actionSpec)
+    )
+).then(characterSprites => {
+    for (const char of characterSprites) {
+        CHARACTERS[char.characterName].sprites = char.sprites;
+    }
+}).then(() => {
+    const sceneManager = new SceneManager(CHARACTERS);
+    sceneManager.createCharacters();
+
+    sceneManager.start();
 });
 
 const canvas = document.getElementById('canvas');
 const ctx = canvas.getContext('2d');
-
-function renderCharacter() {
-    ctx.save();
-    ctx.scale(0.5, 0.5);
-
-    // mainChar.update();
-    // mainChar.render(ctx);
-    zombie1.update();
-    zombie1.render(ctx);
-
-    ctx.restore();
-}
-
-function renderScene() {
-    ctx.clearRect(0, 0, 1000, 600);
-
-    renderCharacter();
-
-    window.requestAnimationFrame(renderScene);
-}
 
 document.addEventListener('keydown', evt => {
     switch (evt.keyCode) {

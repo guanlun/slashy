@@ -1,10 +1,8 @@
-const REFRESH_PER_FRAME = 4;
+const REFRESH_PER_FRAME = 3;
 
 export default class Action {
-    constructor(characterId, actionName, actionSpec, sprites) {
-        this.characterId = characterId;
+    constructor({ actionName = '', sprites }) {
         this.actionName = actionName;
-        this.actionSpec = actionSpec;
         this.sprites = sprites;
 
         this.frameIdx = -1;
@@ -20,14 +18,14 @@ export default class Action {
         if (this.frameIdx >= this.sprites.length * REFRESH_PER_FRAME) {
             this.frameIdx = 0;
 
-            if (this.actionName === 'attack') {
+            if (this.actionName === 'attacking') {
                 this.actionCompleted = true;
             }
         }
     }
 
     render(ctx) {
-        ctx.drawImage(this.sprites[Math.floor(this.frameIdx / REFRESH_PER_FRAME)].img, 0, 0);
+        ctx.drawImage(this.sprites[Math.floor(this.frameIdx / REFRESH_PER_FRAME)], 0, 0);
     }
 
     isActionCompleted() {

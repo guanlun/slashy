@@ -4,15 +4,15 @@ export default class Renderer {
         this.ctx = canvas.getContext('2d');
     }
 
-    startRender() {
-        window.requestAnimationFrame(this.render);
-    }
-
-    render() {
+    render(sceneContent) {
+        this.ctx.clearRect(0, 0, 1000, 600);
         this.ctx.save();
+        this.ctx.scale(0.5, 0.5);
+
+        for (const char of sceneContent.characters) {
+            char.render(this.ctx);
+        }
 
         this.ctx.restore();
-
-        window.requestAnimationFrame(this.render);
     }
 }

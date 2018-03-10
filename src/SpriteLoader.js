@@ -1,5 +1,3 @@
-import Action from './Action';
-
 const SPRITE_DIR = '../images/sprites';
 
 export function loadCharacterSprites(characterName, characterSpec) {
@@ -9,7 +7,7 @@ export function loadCharacterSprites(characterName, characterSpec) {
                 const actionSpec = characterSpec[actionName];
                 
                 loadActionSprites(characterName, actionName, actionSpec).then(sprites => {
-                    resolve(new Action(characterName, actionName, actionSpec, sprites));
+                    resolve({ actionName, sprites });
                 });
             })
         )
@@ -17,15 +15,17 @@ export function loadCharacterSprites(characterName, characterSpec) {
         // convert loaded action array to object with action name as keys
         const actionMap = {};
         for (const action of loadedActions) {
-            actionMap[action.actionName] = action;
+            actionMap[action.actionName] = action.sprites;
         }
 
-        return actionMap;
+        return {
+            characterName,
+            sprites: actionMap,
+        };
     });
 }
 
 function loadActionSprites(characterName, actionName, actionSpec) {
-    const action = new Action(characterName, actionName, actionSpec);
     const baseName = actionName.charAt(0).toUpperCase() + actionName.slice(1);
     const sprites = [];
 
@@ -43,7 +43,8 @@ function loadActionSprites(characterName, actionName, actionSpec) {
                 const img = new Image();
                 img.onload = data => {
                     sprite.img = img;
-                    resolve(sprite);
+                    // resolve(sprite);
+                    resolve(img);
                 }
                 img.src = sprite.filePath;
             })

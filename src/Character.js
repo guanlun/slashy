@@ -2,32 +2,32 @@ import Action from './Action';
 import { loadCharacterSprites } from './SpriteLoader';
 
 export default class Character {
-    constructor(name) {
+    constructor({ name = '', actionTemplate = {}, position = { x: 0, y: 0 } }) {
         this.name = name;
-        this.actions = {};
+        this.createActions(actionTemplate);
+
         this.currAction = undefined;
 
-        this.position = {
-            x: 0,
-            y: 0,
-        };
+        this.position = position || { x: 0, y: 0 };
 
         this.movingDir = undefined;
     }
 
-    loadCharacter(characterSpec) {
-        return loadCharacterSprites(this.name, characterSpec).then(actions => {
-            this.actions = actions;
-        });
+    createActions(actionTemplate) {
+        this.actions = {};
+
+        for (const actionName of Object.keys(actionTemplate)) {
+            this.actions[actionName] = new Action({ sprites: actionTemplate[actionName] });
+        }
     }
 
     walkForward() {
-        this.currAction = this.actions['walk'];
+        this.currAction = this.actions['walking'];
         this.movingDir = 'forward';
     }
 
     walkBackward() {
-        this.currAction = this.actions['walk'];
+        this.currAction = this.actions['walking'];
         this.movingDir = 'backward';
     }
 
@@ -37,7 +37,7 @@ export default class Character {
     }
 
     attack() {
-        this.currAction = this.actions['attack'];
+        this.currAction = this.actions['attacking'];
         this.currAction.actionCompleted = false;
     }
 
@@ -47,9 +47,9 @@ export default class Character {
         }
 
         if (this.movingDir === 'forward') {
-            this.position.x += 10;
+            this.position.x += 3;
         } else if (this.movingDir === 'backward') {
-            this.position.x -= 6;
+            this.position.x -= 3;
         }
 
         this.currAction.update();
