@@ -1,10 +1,7 @@
 import Config from './config';
-import Renderer from './Renderer';
-import Character from './Character';
 import SceneManager from './SceneManager';
-import ZombieBehavior from './ZombieBehavior';
-import MainCharBehavior from './MainCharBehavior';
 import { loadCharacterSprites } from './SpriteLoader';
+import { COMMAND, setCommand } from './UserCommandManager';
 
 const BASIC_CHAR_ACTIONS = {
     attacking: { length: 12 },
@@ -48,27 +45,30 @@ const ctx = canvas.getContext('2d');
 document.addEventListener('keydown', evt => {
     switch (evt.keyCode) {
         case 37:
-            mainChar.walkBackward();
+            // mainChar.walkBackward();
             break;
         case 39:
-            mainChar.walkForward();
+            // mainChar.walkForward();
+            setCommand(COMMAND.WALK);
             break;
         case 65:
-            mainChar.attack();
+            setCommand(COMMAND.ATTACK);
+            // mainChar.attack();
             break;
         case 68:
-            mainChar.die();
+            // mainChar.die();
             break;
     }
 });
 
 document.addEventListener('keyup', evt => {
-    switch (evt.keyCode) {
-        case 37:
-        case 39:
-            mainChar.idle();
-            break;
-    }
+    setCommand(COMMAND.IDLE);
+    // switch (evt.keyCode) {
+    //     case 37:
+    //     case 39:
+    //         // mainChar.idle();
+    //         break;
+    // }
 });
 
 const wsAddr = `ws://${Config.WS_SERVER_IP}:${Config.WS_SERVER_PORT}`;

@@ -2,11 +2,18 @@ import Action from './Action';
 import { loadCharacterSprites } from './SpriteLoader';
 
 export default class Character {
-    constructor({ name = '', actionTemplate = {}, position = { x: 0, y: 0 } }) {
+    constructor({
+        name = '',
+        actionTemplate = {},
+        position = { x: 0, y: 0 },
+        behavior,
+    }) {
         this.name = name;
         this.createActions(actionTemplate);
 
         this.currAction = undefined;
+        this.behavior = behavior;
+        this.behavior.setCharacter(this);
 
         this.position = position || { x: 0, y: 0 };
 
@@ -17,7 +24,7 @@ export default class Character {
         this.actions = {};
 
         for (const actionName of Object.keys(actionTemplate)) {
-            this.actions[actionName] = new Action({ sprites: actionTemplate[actionName] });
+            this.actions[actionName] = new Action({ actionName, sprites: actionTemplate[actionName] });
         }
     }
 
@@ -42,14 +49,16 @@ export default class Character {
     }
 
     update() {
+        this.behavior.update();
+
         if (!this.currAction || this.currAction.isActionCompleted()) {
             this.idle();
         }
 
         if (this.movingDir === 'forward') {
-            this.position.x += 3;
+            this.position.x += 5;
         } else if (this.movingDir === 'backward') {
-            this.position.x -= 3;
+            this.position.x -= 5;
         }
 
         this.currAction.update();

@@ -17,6 +17,7 @@ export default class Action {
         this.frameIdx++;
         if (this.frameIdx >= this.sprites.length * REFRESH_PER_FRAME) {
             this.frameIdx = 0;
+            // console.log(this.actionName)
 
             if (this.actionName === 'attacking') {
                 this.actionCompleted = true;
