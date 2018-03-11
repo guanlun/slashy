@@ -46,10 +46,11 @@ document.addEventListener('keydown', evt => {
     switch (evt.keyCode) {
         case 37:
             // mainChar.walkBackward();
+            setCommand(COMMAND.WALK_BACKWARD);
             break;
         case 39:
             // mainChar.walkForward();
-            setCommand(COMMAND.WALK);
+            setCommand(COMMAND.WALK_FORWARD);
             break;
         case 65:
             setCommand(COMMAND.ATTACK);

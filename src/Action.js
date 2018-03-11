@@ -17,7 +17,6 @@ export default class Action {
         this.frameIdx++;
         if (this.frameIdx >= this.sprites.length * REFRESH_PER_FRAME) {
             this.frameIdx = 0;
-            // console.log(this.actionName)
 
             if (this.actionName === 'attacking') {
                 this.actionCompleted = true;
@@ -25,8 +24,13 @@ export default class Action {
         }
     }
 
-    render(ctx) {
-        ctx.drawImage(this.sprites[Math.floor(this.frameIdx / REFRESH_PER_FRAME)], 0, 0);
+    render(ctx, flipped) {
+        ctx.drawImage(
+            this.sprites[Math.floor(this.frameIdx / REFRESH_PER_FRAME)],
+            0,
+            0,
+            flipped ? -200 : 200, 200
+        );
     }
 
     isActionCompleted() {

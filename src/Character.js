@@ -17,7 +17,7 @@ export default class Character {
 
         this.position = position || { x: 0, y: 0 };
 
-        this.movingDir = undefined;
+        this.flipped = this.behavior.defaultFlipped;
     }
 
     createActions(actionTemplate) {
@@ -28,19 +28,24 @@ export default class Character {
         }
     }
 
-    walkForward() {
-        this.currAction = this.actions['walking'];
-        this.movingDir = 'forward';
+    getCurrActionName() {
+        if (this.currAction) {
+            return this.currAction.actionName;
+        } else {
+            return null;
+        }
     }
 
-    walkBackward() {
+    walk() {
         this.currAction = this.actions['walking'];
-        this.movingDir = 'backward';
     }
 
     idle() {
-        this.currAction = this.actions['idle'];
-        this.movingDir = undefined;
+        if (this.currAction && this.currAction.actionName === 'attacking') {
+            this.nextAction = this.actions['idle'];
+        } else {
+            this.currAction = this.actions['idle'];
+        }
     }
 
     attack() {
@@ -48,17 +53,23 @@ export default class Character {
         this.currAction.actionCompleted = false;
     }
 
+    flip() {
+        this.flipped = !this.flipped;
+    }
+
     update() {
         this.behavior.update();
 
-        if (!this.currAction || this.currAction.isActionCompleted()) {
+        if (!this.currAction) {
             this.idle();
         }
 
-        if (this.movingDir === 'forward') {
-            this.position.x += 5;
-        } else if (this.movingDir === 'backward') {
-            this.position.x -= 5;
+        if (this.currAction.actionName === 'attacking' && this.currAction.isActionCompleted()) {
+            this.idle();
+        }
+
+        if (this.currAction.actionName === 'walking') {
+            this.position.x += this.flipped ? -5 : 5;
         }
 
         this.currAction.update();
@@ -69,7 +80,11 @@ export default class Character {
 
         ctx.translate(this.position.x, this.position.y);
 
-        this.currAction.render(ctx);
+        if (this.flipped) {
+            ctx.scale(-1, 1);
+        }
+
+        this.currAction.render(ctx, this.flipped);
 
         ctx.restore();
     }

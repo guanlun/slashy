@@ -7,7 +7,6 @@ export default class Renderer {
     render(sceneContent) {
         this.ctx.clearRect(0, 0, 1000, 600);
         this.ctx.save();
-        this.ctx.scale(0.5, 0.5);
 
         for (const char of sceneContent.characters) {
             char.render(this.ctx);

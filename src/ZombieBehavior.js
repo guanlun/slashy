@@ -1,7 +1,11 @@
 import BaseBehavior from './BaseBehavior';
 
 export default class ZombieBehavior extends BaseBehavior {
+    constructor() {
+        super();
+        this.defaultFlipped = true;
+    }
+
     update() {
-        // this.character.currAction = this.character.actions['walking'];
     }
 }
