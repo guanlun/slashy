@@ -7,6 +7,7 @@ const BASIC_CHAR_ACTIONS = {
     attacking: { length: 12 },
     walking: { length: 18 },
     idle: { length: 12 },
+    dying: { length: 15 },
 };
 
 const CHARACTERS = {
@@ -14,13 +15,13 @@ const CHARACTERS = {
         actionSpec: BASIC_CHAR_ACTIONS,
     },
     'zombie-1': {
-        actionSpec: BASIC_CHAR_ACTIONS
+        actionSpec: BASIC_CHAR_ACTIONS,
     },
     'zombie-2': {
-        actionSpec: BASIC_CHAR_ACTIONS
+        actionSpec: BASIC_CHAR_ACTIONS,
     },
     'zombie-3': {
-        actionSpec: BASIC_CHAR_ACTIONS
+        actionSpec: BASIC_CHAR_ACTIONS,
     },
 };
 

@@ -10,6 +10,7 @@ export default class SceneManager {
         this.renderer = new Renderer();
 
         this.sceneContent = {};
+        this.colliders = [];
     }
 
     createCharacters() {
@@ -17,6 +18,7 @@ export default class SceneManager {
             name: 'main',
             actionTemplate: this.spriteTemplates['main'].sprites,
             behavior: new MainCharBehavior(),
+            sceneManager: this,
         });
 
         this.sceneContent.characters = [
@@ -24,17 +26,20 @@ export default class SceneManager {
             new Character({
                 actionTemplate: this.spriteTemplates['zombie-1'].sprites,
                 position: { x: 300, y: 0 },
-                behavior: new ZombieBehavior(),
+                behavior: new ZombieBehavior(this.mainChar),
+                sceneManager: this,
             }),
             new Character({
                 actionTemplate: this.spriteTemplates['zombie-2'].sprites,
                 position: { x: 600, y: 0 },
-                behavior: new ZombieBehavior(),
+                behavior: new ZombieBehavior(this.mainChar),
+                sceneManager: this,
             }),
             new Character({
                 actionTemplate: this.spriteTemplates['zombie-3'].sprites,
                 position: { x: 900, y: 0 },
-                behavior: new ZombieBehavior(),
+                behavior: new ZombieBehavior(this.mainChar),
+                sceneManager: this,
             }),
         ];
     }
@@ -51,5 +56,15 @@ export default class SceneManager {
 
     start() {
         window.requestAnimationFrame(this.update.bind(this));
+    }
+
+    registerCollider(collider) {
+        this.colliders.push(collider);
+    }
+
+    checkAttackCollision(weaponCollider) {
+        for (const collider of this.colliders) {
+            collider.checkWeaponAttackCollision(weaponCollider);
+        }
     }
 }
