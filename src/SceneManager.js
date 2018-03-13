@@ -5,18 +5,22 @@ import ZombieBehavior from './ZombieBehavior';
 import MainCharBehavior from './MainCharBehavior';
 
 export default class SceneManager {
-    constructor(spriteTemplates) {
-        this.spriteTemplates = spriteTemplates;
-        this.renderer = new Renderer();
+    constructor(loadedResources) {
+        this.loadedResources = loadedResources;
 
         this.sceneContent = {};
         this.colliders = [];
+
+        this.createCharacters();
+        this.createBackground();
+
+        this.renderer = new Renderer(this.sceneContent);
     }
 
     createCharacters() {
         this.mainChar = new Character({
             name: 'main',
-            actionTemplate: this.spriteTemplates['main'].sprites,
+            actionTemplate: this.loadedResources.characters['main'],
             behavior: new MainCharBehavior(),
             sceneManager: this,
         });
@@ -24,24 +28,30 @@ export default class SceneManager {
         this.sceneContent.characters = [
             this.mainChar,
             new Character({
-                actionTemplate: this.spriteTemplates['zombie-1'].sprites,
+                actionTemplate: this.loadedResources.characters['zombie-1'],
                 position: { x: 300, y: 0 },
                 behavior: new ZombieBehavior(this.mainChar),
                 sceneManager: this,
             }),
             new Character({
-                actionTemplate: this.spriteTemplates['zombie-2'].sprites,
+                actionTemplate: this.loadedResources.characters['zombie-2'],
                 position: { x: 600, y: 0 },
                 behavior: new ZombieBehavior(this.mainChar),
                 sceneManager: this,
             }),
             new Character({
-                actionTemplate: this.spriteTemplates['zombie-3'].sprites,
+                actionTemplate: this.loadedResources.characters['zombie-3'],
                 position: { x: 900, y: 0 },
                 behavior: new ZombieBehavior(this.mainChar),
                 sceneManager: this,
             }),
         ];
+    }
+
+    createBackground() {
+        this.sceneContent.background = {
+            img: this.loadedResources.background,
+        };
     }
 
     update() {

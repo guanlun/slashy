@@ -48,6 +48,7 @@ export default class Character {
     }
 
     idle() {
+        // TODO: bug: looks like after attacking the animation would stop
         if (this.currAction && this.currAction.actionName === 'attacking') {
             this.nextAction = this.actions['idle'];
         } else {
@@ -57,6 +58,11 @@ export default class Character {
 
     attack() {
         this.currAction = this.actions['attacking'];
+        this.currAction.actionCompleted = false;
+    }
+
+    hurt() {
+        this.currAction = this.actions['hurt'];
         this.currAction.actionCompleted = false;
     }
 
@@ -76,14 +82,18 @@ export default class Character {
             this.idle();
         }
 
+        // TODO: refactor this
         if (this.currAction.actionName === 'attacking') {
             if (this.currAction.isActionCompleted()) {
                 this.idle();
             }
 
             if (this.currAction.getAnimationFrameIdx() === 10 && this.currAction.frameSkipCount === 0) {
-                // console.log('attacking!!')
                 this.sceneManager.checkAttackCollision(this.collider);
+            }
+        } else if (this.currAction.actionName === 'hurt') {
+            if (this.currAction.isActionCompleted()) {
+                this.idle();
             }
         }
 

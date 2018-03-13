@@ -26,7 +26,7 @@ export default class Action {
                 this.frameIdx = 0;
             }
 
-            if (this.actionName === 'attacking') {
+            if (this.actionName === 'attacking' || this.actionName === 'hurt') {
                 this.actionCompleted = true;
             }
         }

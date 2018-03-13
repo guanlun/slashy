@@ -1,6 +1,6 @@
 import Config from './config';
 import SceneManager from './SceneManager';
-import { loadCharacterSprites } from './SpriteLoader';
+import { loadResources } from './SpriteLoader';
 import { COMMAND, setCommand } from './UserCommandManager';
 
 const BASIC_CHAR_ACTIONS = {
@@ -8,6 +8,7 @@ const BASIC_CHAR_ACTIONS = {
     walking: { length: 18 },
     idle: { length: 12 },
     dying: { length: 15 },
+    hurt: { length: 12 },
 };
 
 const CHARACTERS = {
@@ -25,18 +26,13 @@ const CHARACTERS = {
     },
 };
 
-Promise.all(
-    Object.keys(CHARACTERS).map(
-        name => loadCharacterSprites(name, CHARACTERS[name].actionSpec)
-    )
-).then(characterSprites => {
-    for (const char of characterSprites) {
-        CHARACTERS[char.characterName].sprites = char.sprites;
-    }
-}).then(() => {
-    const sceneManager = new SceneManager(CHARACTERS);
-    sceneManager.createCharacters();
+let background = null;
 
+loadResources({
+    characters: CHARACTERS,
+    background: 'seamless-bg',
+}).then(loadedResources => {
+    const sceneManager = new SceneManager(loadedResources);
     sceneManager.start();
 });
 
