@@ -18,31 +18,33 @@ export default class SceneManager {
     }
 
     createCharacters() {
-        this.mainChar = new Character({
+        const mainChar = new Character({
             name: 'main',
             actionTemplate: this.loadedResources.characters['main'],
             behavior: new MainCharBehavior(),
             sceneManager: this,
         });
 
+        this.sceneContent.mainChar = mainChar;
+
         this.sceneContent.characters = [
-            this.mainChar,
+            mainChar,
             new Character({
                 actionTemplate: this.loadedResources.characters['zombie-1'],
                 position: { x: 300, y: 0 },
-                behavior: new ZombieBehavior(this.mainChar),
+                behavior: new ZombieBehavior(mainChar),
                 sceneManager: this,
             }),
             new Character({
                 actionTemplate: this.loadedResources.characters['zombie-2'],
                 position: { x: 600, y: 0 },
-                behavior: new ZombieBehavior(this.mainChar),
+                behavior: new ZombieBehavior(mainChar),
                 sceneManager: this,
             }),
             new Character({
                 actionTemplate: this.loadedResources.characters['zombie-3'],
                 position: { x: 900, y: 0 },
-                behavior: new ZombieBehavior(this.mainChar),
+                behavior: new ZombieBehavior(mainChar),
                 sceneManager: this,
             }),
         ];

@@ -13,14 +13,22 @@ export default class Renderer {
 
     render(sceneContent) {
         this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+
+        const baseXPosition = sceneContent.mainChar.position.x - this.canvas.width / 2 + 160;
+
         this.ctx.save();
 
-        this.ctx.fillStyle = this.backgroundPattern;
-        this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
+        this.ctx.translate(-baseXPosition, 0);
 
+        this.renderBackground(this.backgroundPattern, baseXPosition);
         this.renderCharacters(sceneContent.characters);
 
         this.ctx.restore();
+    }
+
+    renderBackground(background, baseXPosition) {
+        this.ctx.fillStyle = this.backgroundPattern;
+        this.ctx.fillRect(baseXPosition, 0, this.canvas.width, this.canvas.height);
     }
 
     renderCharacters(characters) {
