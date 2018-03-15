@@ -1,6 +1,17 @@
 import Action from './Action';
 import Collider from './Collider';
 import { loadCharacterSprites } from './SpriteLoader';
+import { ACTIONS, ATOMIC_ACTIONS, TERMINAL_ACTIONS } from './Constants';
+
+function isAtomic(action) {
+    return ATOMIC_ACTIONS.indexOf(action) !== -1;
+}
+
+function isTerminal(action) {
+    return TERMINAL_ACTIONS.indexOf(action) !== -1;
+}
+
+const REFRESH_PER_FRAME = 3;
 
 export default class Character {
     constructor({
@@ -11,9 +22,13 @@ export default class Character {
         sceneManager,
     }) {
         this.name = name;
-        this.createActions(actionTemplate);
 
-        this.currAction = undefined;
+        this.actionSeqs = actionTemplate;
+        this.actionFrameIdx = 0;
+        this.frameSkipCount = 0;
+        this.actionCompleted = false;
+
+        this.currAction = ACTIONS.IDLE;
         this.behavior = behavior;
         this.behavior.setCharacter(this);
 
@@ -27,81 +42,57 @@ export default class Character {
         this.sceneManager.registerCollider(this.collider);
     }
 
-    createActions(actionTemplate) {
-        this.actions = {};
-
-        for (const actionName of Object.keys(actionTemplate)) {
-            this.actions[actionName] = new Action({ actionName, sprites: actionTemplate[actionName] });
-        }
+    getCurrAction() {
+        return this.currAction;
     }
 
-    getCurrActionName() {
-        if (this.currAction) {
-            return this.currAction.actionName;
+    changeAction(action) {
+        if (action === this.currAction) {
+            return;
+        }
+
+        if (isAtomic(this.currAction)) {
+            this.nextAction = action;
         } else {
-            return null;
+            this.setAction(action);
         }
     }
 
-    walk() {
-        this.currAction = this.actions['walking'];
-    }
-
-    idle() {
-        // TODO: bug: looks like after attacking the animation would stop
-        if (this.currAction && this.currAction.actionName === 'attacking') {
-            this.nextAction = this.actions['idle'];
-        } else {
-            this.currAction = this.actions['idle'];
-        }
-    }
-
-    attack() {
-        this.currAction = this.actions['attacking'];
-        this.currAction.actionCompleted = false;
-    }
-
-    hurt() {
-        this.currAction = this.actions['hurt'];
-        this.currAction.actionCompleted = false;
-    }
-
-    die() {
-        this.currAction = this.actions['dying'];
-        this.currAction.actionCompleted = false;
-    }
-
-    flip() {
-        this.flipped = !this.flipped;
+    setAction(action) {
+        this.currAction = action;
+        this.actionFrameIdx = 0;
+        this.actionCompleted = false;
     }
 
     update() {
         this.behavior.update();
 
-        if (!this.currAction) {
-            this.idle();
+        const currActionSequence = this.actionSeqs[this.currAction];
+
+        const currActionAtomic = isAtomic(this.currAction);
+
+        if (currActionAtomic && this.actionCompleted) {
+            this.setAction(this.nextAction || ACTIONS.IDLE);
         }
 
-        // TODO: refactor this
-        if (this.currAction.actionName === 'attacking') {
-            if (this.currAction.isActionCompleted()) {
-                this.idle();
-            }
-
-            if (this.currAction.getAnimationFrameIdx() === 10 && this.currAction.frameSkipCount === 0) {
-                this.sceneManager.checkAttackCollision(this.collider);
-            }
-        } else if (this.currAction.actionName === 'hurt') {
-            if (this.currAction.isActionCompleted()) {
-                this.idle();
-            }
+        switch (this.currAction) {
+            case ACTIONS.WALK:
+                this.position.x += this.flipped ? -5 : 5;
+                break;
+            case ACTIONS.ATTACK:
+                if (this.actionFrameIdx === 10 && this.frameSkipCount === 0) {
+                    this.sceneManager.checkAttackCollision(this.collider);
+                }
+                break;
         }
 
-        if (this.currAction.actionName === 'walking') {
-            this.position.x += this.flipped ? -5 : 5;
-        }
+        if (this.actionFrameIdx === currActionSequence.length) {
+            if (currActionAtomic) {
+                this.actionCompleted = true;
+            }
 
-        this.currAction.update();
+            this.actionFrameIdx = 0;
+        }
     }
 
     render(ctx) {
@@ -113,8 +104,21 @@ export default class Character {
             ctx.scale(-1, 1);
         }
 
-        this.currAction.render(ctx, this.flipped);
+        const currActionSequence = this.actionSeqs[this.currAction];
+
+        ctx.drawImage(
+            currActionSequence[this.actionFrameIdx],
+            0,
+            0,
+            this.flipped ? -200 : 200, 200
+        );
 
         ctx.restore();
+
+        this.frameSkipCount++;
+        if (this.frameSkipCount === REFRESH_PER_FRAME) {
+            this.frameSkipCount = 0;
+            this.actionFrameIdx++;
+        }
     }
 }

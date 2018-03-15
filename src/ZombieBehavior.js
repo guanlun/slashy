@@ -10,6 +10,10 @@ export default class ZombieBehavior extends BaseBehavior {
     update() {
         const targetPos = this.target.position;
 
+        const xDiff = this.character.position.x - targetPos.x;
 
+        if (xDiff < 400) {
+            // this.character.walk();
+        }
     }
 }

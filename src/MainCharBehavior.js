@@ -1,35 +1,26 @@
 import BaseBehavior from './BaseBehavior';
 import { COMMAND, getCurrentCommand } from './UserCommandManager';
+import { ACTIONS } from './Constants';
 
 export default class MainCharBehavior extends BaseBehavior {
     update() {
         const cmd = getCurrentCommand();
-        const currActionName = this.character.getCurrActionName();
+        const currActionName = this.character.getCurrAction().id;
 
         switch (cmd) {
             case COMMAND.ATTACK:
-                this.character.attack();
+                this.character.changeAction(ACTIONS.ATTACK);
                 break;
             case COMMAND.WALK_FORWARD:
-                if (currActionName === 'walking') {
-                    if (this.character.flipped) {
-                        this.character.flip();
-                    }
-                } else {
-                    this.character.walk();
-                }
+                this.character.flipped = false;
+                this.character.changeAction(ACTIONS.WALK);
                 break;
             case COMMAND.WALK_BACKWARD:
-                if (currActionName === 'walking') {
-                    if (!this.character.flipped) {
-                        this.character.flip();
-                    }
-                } else {
-                    this.character.walk();
-                }
+                this.character.flipped = true;
+                this.character.changeAction(ACTIONS.WALK);
                 break;
             case COMMAND.IDLE:
-                this.character.idle();
+                this.character.changeAction(ACTIONS.IDLE);
                 break;
         }
     }

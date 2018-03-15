@@ -42,31 +42,23 @@ const ctx = canvas.getContext('2d');
 document.addEventListener('keydown', evt => {
     switch (evt.keyCode) {
         case 37:
-            // mainChar.walkBackward();
             setCommand(COMMAND.WALK_BACKWARD);
             break;
         case 39:
-            // mainChar.walkForward();
             setCommand(COMMAND.WALK_FORWARD);
             break;
         case 65:
             setCommand(COMMAND.ATTACK);
-            // mainChar.attack();
             break;
+        case 32:
+            setCommand(COMMAND.JUMP);
         case 68:
-            // mainChar.die();
             break;
     }
 });
 
 document.addEventListener('keyup', evt => {
     setCommand(COMMAND.IDLE);
-    // switch (evt.keyCode) {
-    //     case 37:
-    //     case 39:
-    //         // mainChar.idle();
-    //         break;
-    // }
 });
 
 const wsAddr = `ws://${Config.WS_SERVER_IP}:${Config.WS_SERVER_PORT}`;
@@ -81,7 +73,6 @@ const indicator = document.querySelector('#main')
 wsConn.onmessage = msg => {
     console.log(msg)
     if (msg.data === 'hack') {
-        // currAction = 'attack';
         mainChar.attack();
     }
 }

@@ -1,4 +1,5 @@
 const DAMAGE_DISTANCE = 120;
+import { ACTIONS } from './Constants';
 
 export default class Collider {
     constructor(char) {
@@ -13,11 +14,11 @@ export default class Collider {
         const dist = weaponCollider.character.position.x - this.character.position.x;
         if (weaponCollider.character.flipped) {
             if (dist > 0 && dist < DAMAGE_DISTANCE) {
-                this.character.hurt();
+                this.character.changeAction(ACTIONS.HURT);
             }
         } else {
             if (dist < 0 && dist > -DAMAGE_DISTANCE) {
-                this.character.hurt();
+                this.character.changeAction(ACTIONS.HURT);
             }
         }
     }
