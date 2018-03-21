@@ -1,7 +1,7 @@
 import Config from './config';
 import SceneManager from './SceneManager';
 import { loadResources } from './SpriteLoader';
-import { COMMAND, setCommand } from './UserCommandManager';
+import { COMMAND, setCommand, setJumping } from './UserCommandManager';
 
 const BASIC_CHAR_ACTIONS = {
     attacking: { length: 12 },
@@ -9,6 +9,7 @@ const BASIC_CHAR_ACTIONS = {
     idle: { length: 12 },
     dying: { length: 15 },
     hurt: { length: 12 },
+    jumping: { length: 6 },
 };
 
 const CHARACTERS = {
@@ -51,14 +52,18 @@ document.addEventListener('keydown', evt => {
             setCommand(COMMAND.ATTACK);
             break;
         case 32:
-            setCommand(COMMAND.JUMP);
-        case 68:
+            evt.preventDefault();
+            setJumping(true);
             break;
     }
 });
 
 document.addEventListener('keyup', evt => {
-    setCommand(COMMAND.IDLE);
+    if (evt.keyCode === 32) {
+        setJumping(false);
+    } else {
+        setCommand(COMMAND.IDLE);
+    }
 });
 
 const wsAddr = `ws://${Config.WS_SERVER_IP}:${Config.WS_SERVER_PORT}`;

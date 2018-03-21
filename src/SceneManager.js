@@ -29,27 +29,27 @@ export default class SceneManager {
 
         this.sceneContent.characters = [
             mainChar,
-            new Character({
-                name: 'z1',
-                actionTemplate: this.loadedResources.characters['zombie-1'],
-                position: { x: 300, y: 0 },
-                behavior: new ZombieBehavior(mainChar),
-                sceneManager: this,
-            }),
-            new Character({
-                name: 'z2',
-                actionTemplate: this.loadedResources.characters['zombie-2'],
-                position: { x: 600, y: 0 },
-                behavior: new ZombieBehavior(mainChar),
-                sceneManager: this,
-            }),
-            new Character({
-                name: 'z3',
-                actionTemplate: this.loadedResources.characters['zombie-3'],
-                position: { x: 900, y: 0 },
-                behavior: new ZombieBehavior(mainChar),
-                sceneManager: this,
-            }),
+            // new Character({
+            //     name: 'z1',
+            //     actionTemplate: this.loadedResources.characters['zombie-1'],
+            //     position: { x: 300, y: 0 },
+            //     behavior: new ZombieBehavior(mainChar),
+            //     sceneManager: this,
+            // }),
+            // new Character({
+            //     name: 'z2',
+            //     actionTemplate: this.loadedResources.characters['zombie-2'],
+            //     position: { x: 600, y: 0 },
+            //     behavior: new ZombieBehavior(mainChar),
+            //     sceneManager: this,
+            // }),
+            // new Character({
+            //     name: 'z3',
+            //     actionTemplate: this.loadedResources.characters['zombie-3'],
+            //     position: { x: 900, y: 0 },
+            //     behavior: new ZombieBehavior(mainChar),
+            //     sceneManager: this,
+            // }),
         ];
     }
 

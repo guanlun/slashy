@@ -1,7 +1,6 @@
-import Action from './Action';
 import Collider from './Collider';
 import { loadCharacterSprites } from './SpriteLoader';
-import { ACTIONS, ATOMIC_ACTIONS, TERMINAL_ACTIONS } from './Constants';
+import { ACTIONS, ATOMIC_ACTIONS, TERMINAL_ACTIONS, CONTINUING_ACTIONS } from './Constants';
 
 function isAtomic(action) {
     return ATOMIC_ACTIONS.indexOf(action) !== -1;
@@ -27,6 +26,8 @@ export default class Character {
         this.actionFrameIdx = 0;
         this.frameSkipCount = 0;
         this.actionCompleted = false;
+
+        this.jumpFrameIdx = 0;
 
         this.currAction = ACTIONS.IDLE;
         this.behavior = behavior;
@@ -71,10 +72,24 @@ export default class Character {
 
         const currActionAtomic = isAtomic(this.currAction);
 
-        if (currActionAtomic && this.actionCompleted) {
+        if (this.jumping) {
+            if (this.jumpFrameIdx === 39) {
+
+                // this.setAction(this.nextAction || ACTIONS.IDLE);
+
+                this.jumping = false;
+                this.position.y = 0;
+            } else {
+                this.yVel -= 0.1;
+                this.position.y -= this.yVel * 10;
+                this.jumpFrameIdx++;
+            }
+
+        } else if (currActionAtomic && this.actionCompleted) {
             this.setAction(this.nextAction || ACTIONS.IDLE);
         }
 
+        // TODO: move to behavior classes?
         switch (this.currAction) {
             case ACTIONS.WALK:
                 this.position.x += this.flipped ? -5 : 5;
@@ -93,6 +108,16 @@ export default class Character {
 
             this.actionFrameIdx = 0;
         }
+    }
+
+    startJumping() {
+        if (this.jumping) {
+            return;
+        }
+
+        this.jumping = true;
+        this.yVel = 2.0;
+        this.jumpFrameIdx = 0;
     }
 
     render(ctx) {

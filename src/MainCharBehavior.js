@@ -1,5 +1,5 @@
 import BaseBehavior from './BaseBehavior';
-import { COMMAND, getCurrentCommand } from './UserCommandManager';
+import { COMMAND, getCurrentCommand, isJumping } from './UserCommandManager';
 import { ACTIONS } from './Constants';
 
 export default class MainCharBehavior extends BaseBehavior {
@@ -22,6 +22,10 @@ export default class MainCharBehavior extends BaseBehavior {
             case COMMAND.IDLE:
                 this.character.changeAction(ACTIONS.IDLE);
                 break;
+        }
+
+        if (isJumping()) {
+            this.character.startJumping();
         }
     }
 }

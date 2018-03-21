@@ -1,4 +1,5 @@
 let currCommand = null;
+let jumping = false;
 
 export const COMMAND = {
     IDLE: 0,
@@ -12,6 +13,14 @@ export function setCommand(cmd) {
     currCommand = cmd;
 }
 
+export function setJumping(j) {
+    jumping = j;
+}
+
 export function getCurrentCommand() {
     return currCommand;
+}
+
+export function isJumping() {
+    return jumping;
 }
