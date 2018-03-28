@@ -12,6 +12,14 @@ const BASIC_CHAR_ACTIONS = {
     jumping: { length: 6 },
 };
 
+const FROG_ACTIONS = {
+    attacking: { length: 3 },
+    idle: { length: 8 },
+    walking: { length: 4 },
+    hurt: { length: 2 },
+    dying: { length: 10 },
+};
+
 const CHARACTERS = {
     'main': {
         actionSpec: BASIC_CHAR_ACTIONS,
@@ -24,6 +32,9 @@ const CHARACTERS = {
     },
     'zombie-3': {
         actionSpec: BASIC_CHAR_ACTIONS,
+    },
+    'frog': {
+        actionSpec: FROG_ACTIONS,
     },
 };
 

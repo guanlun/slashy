@@ -1,4 +1,5 @@
 import Collider from './Collider';
+import HealthManager from './HealthManager';
 import { loadCharacterSprites } from './SpriteLoader';
 import { ACTIONS, ATOMIC_ACTIONS, TERMINAL_ACTIONS, CONTINUING_ACTIONS } from './Constants';
 
@@ -39,8 +40,16 @@ export default class Character {
 
         this.flipped = this.behavior.defaultFlipped;
 
+        this.dying = false;
+        this.dead = false;
+
         this.collider = new Collider(this);
+        this.healthManager = new HealthManager(this, behavior.hp);
         this.sceneManager.registerCollider(this.collider);
+    }
+
+    isMainChar() {
+        return this.behavior.isMainChar;
     }
 
     getCurrAction() {
@@ -48,12 +57,24 @@ export default class Character {
     }
 
     changeAction(action) {
+        if (this.dying || this.dead) {
+            return;
+        }
+
         if (action === this.currAction) {
             return;
         }
 
+        if (action === ACTIONS.DYING) {
+            this.dying = true;
+        }
+
         if (isAtomic(this.currAction)) {
-            this.nextAction = action;
+            if (this.currAction === ACTIONS.HURT && action === ACTIONS.DYING) {
+                this.setAction(action);
+            } else {
+                this.nextAction = action;
+            }
         } else {
             this.setAction(action);
         }
@@ -66,6 +87,10 @@ export default class Character {
     }
 
     update() {
+        if (this.dead) {
+            return;
+        }
+
         this.behavior.update();
 
         const currActionSequence = this.actionSeqs[this.currAction];
@@ -74,9 +99,6 @@ export default class Character {
 
         if (this.jumping) {
             if (this.jumpFrameIdx === 39) {
-
-                // this.setAction(this.nextAction || ACTIONS.IDLE);
-
                 this.jumping = false;
                 this.position.y = 0;
             } else {
@@ -92,7 +114,7 @@ export default class Character {
         // TODO: move to behavior classes?
         switch (this.currAction) {
             case ACTIONS.WALK:
-                this.position.x += this.flipped ? -5 : 5;
+                this.position.x += this.flipped ? -this.behavior.walkingSpeed : this.behavior.walkingSpeed;
                 break;
             case ACTIONS.ATTACK:
                 if (this.actionFrameIdx === 10 && this.frameSkipCount === 0) {
@@ -101,12 +123,24 @@ export default class Character {
                 break;
         }
 
+        this.frameSkipCount++;
+        if (this.frameSkipCount === REFRESH_PER_FRAME) {
+            this.frameSkipCount = 0;
+
+            this.actionFrameIdx++;
+        }
+
         if (this.actionFrameIdx === currActionSequence.length) {
             if (currActionAtomic) {
                 this.actionCompleted = true;
             }
 
-            this.actionFrameIdx = 0;
+            if (this.currAction === ACTIONS.DYING) {
+                this.actionFrameIdx--;
+                this.dead = true;
+            } else {
+                this.actionFrameIdx = 0;
+            }
         }
     }
 
@@ -118,6 +152,12 @@ export default class Character {
         this.jumping = true;
         this.yVel = 2.0;
         this.jumpFrameIdx = 0;
+    }
+
+    takeDamage(damage) {
+        this.changeAction(ACTIONS.HURT);
+
+        this.healthManager.takeDamage(damage);
     }
 
     render(ctx) {
@@ -139,11 +179,5 @@ export default class Character {
         );
 
         ctx.restore();
-
-        this.frameSkipCount++;
-        if (this.frameSkipCount === REFRESH_PER_FRAME) {
-            this.frameSkipCount = 0;
-            this.actionFrameIdx++;
-        }
     }
 }

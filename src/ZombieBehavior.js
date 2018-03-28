@@ -13,9 +13,16 @@ export default class ZombieBehavior extends BaseBehavior {
         this.target = target;
 
         this.lastAttackTime = 0;
+
+        this.walkingSpeed = 3;
+        this.hp = 100;
     }
 
     update() {
+        if (this.character.dead) {
+            return;
+        }
+
         const targetPos = this.target.position;
 
         const xDiff = this.character.position.x - targetPos.x;

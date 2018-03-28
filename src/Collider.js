@@ -7,18 +7,19 @@ export default class Collider {
     }
 
     checkWeaponAttackCollision(weaponCollider) {
-        if (weaponCollider === this) {
+        if (weaponCollider.character.isMainChar() === this.character.isMainChar()) {
             return;
         }
 
-        const dist = weaponCollider.character.position.x - this.character.position.x;
+        const xDist = weaponCollider.character.position.x - this.character.position.x;
+        const yDistAbs = Math.abs(weaponCollider.character.position.y - this.character.position.y);
         if (weaponCollider.character.flipped) {
-            if (dist > 0 && dist < DAMAGE_DISTANCE) {
-                this.character.changeAction(ACTIONS.HURT);
+            if (xDist > 0 && xDist < DAMAGE_DISTANCE && yDistAbs < 60) {
+                this.character.takeDamage(50);
             }
         } else {
-            if (dist < 0 && dist > -DAMAGE_DISTANCE) {
-                this.character.changeAction(ACTIONS.HURT);
+            if (xDist < 0 && xDist > -DAMAGE_DISTANCE && yDistAbs < 60) {
+                this.character.takeDamage(50);
             }
         }
     }

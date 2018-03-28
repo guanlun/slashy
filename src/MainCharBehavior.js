@@ -3,6 +3,14 @@ import { COMMAND, getCurrentCommand, isJumping } from './UserCommandManager';
 import { ACTIONS } from './Constants';
 
 export default class MainCharBehavior extends BaseBehavior {
+    constructor() {
+        super();
+
+        this.isMainChar = true;
+        this.walkingSpeed = 8;
+        this.hp = 10000;
+    }
+
     update() {
         const cmd = getCurrentCommand();
         const currActionName = this.character.getCurrAction().id;

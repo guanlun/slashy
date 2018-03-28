@@ -29,28 +29,32 @@ export default class SceneManager {
 
         this.sceneContent.characters = [
             mainChar,
-            // new Character({
-            //     name: 'z1',
-            //     actionTemplate: this.loadedResources.characters['zombie-1'],
-            //     position: { x: 300, y: 0 },
-            //     behavior: new ZombieBehavior(mainChar),
-            //     sceneManager: this,
-            // }),
-            // new Character({
-            //     name: 'z2',
-            //     actionTemplate: this.loadedResources.characters['zombie-2'],
-            //     position: { x: 600, y: 0 },
-            //     behavior: new ZombieBehavior(mainChar),
-            //     sceneManager: this,
-            // }),
-            // new Character({
-            //     name: 'z3',
-            //     actionTemplate: this.loadedResources.characters['zombie-3'],
-            //     position: { x: 900, y: 0 },
-            //     behavior: new ZombieBehavior(mainChar),
-            //     sceneManager: this,
-            // }),
+            new Character({
+                name: 'frog',
+                actionTemplate: this.loadedResources.characters['frog'],
+                position: { x: 1200, y: 0 },
+                behavior: new ZombieBehavior(mainChar),
+                sceneManager: this,
+            }),
         ];
+
+        this.spawnZombie(300);
+        this.spawnZombie(600);
+        this.spawnZombie(900);
+    }
+
+    spawnZombie(xPosition) {
+        const resIdx = Math.ceil(Math.random() * 3);
+
+        this.sceneContent.characters.push(
+            new Character({
+                name: `z${this.sceneContent.characters.length}`,
+                actionTemplate: this.loadedResources.characters[`zombie-${resIdx}`],
+                position: { x: xPosition, y: 0 },
+                behavior: new ZombieBehavior(this.sceneContent.mainChar),
+                sceneManager: this,
+            }),
+        );
     }
 
     createBackground() {
