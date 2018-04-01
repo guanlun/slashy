@@ -9,6 +9,7 @@
         html, body {
             margin: 0;
             padding: 0;
+            font-family: Helvetica;
         }
 
         #main {
@@ -16,11 +17,61 @@
             height: 100px;
             border-radius: 50%;
         }
+
+        #hud-menus {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            background: rgba(0, 0, 0, 0.4);
+            align-items: center;
+            justify-content: center;
+        }
+
+        .hud-main {
+            width: 800px;
+            height: 300px;
+            padding: 20px;
+            background: white;
+            border-radius: 10px;
+        }
+
+        .story {
+            font-size: 18px;
+        }
+
+        .button-container {
+            width: 100%;
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        #start-game-button {
+            width: 200px;
+            font-size: 30px;
+            outline: none;
+            border: 2px purple solid;
+            margin: 0 auto;
+        }
     </style>
 </head>
 <body>
     <div id="main">
-        <canvas id="canvas" />
+        <canvas id="canvas"></canvas>
+        <div id="hud-menus">
+            <div class="hud-main">
+                <div class="story">
+                    One day a mysterious old man learned magic. After gaining the power of magic, he started to learn that the truth behind long life or eternity is to collect souls of all living people in the world. He learned it so late, that when he died in a hospital called 301, he did not have enough magic power to sustain his life form. Instead, he turned himself into a frog. The frog secretly absorbs people’s souls in that hospital by each second. Rumors began to spread that people who came to that hospital will have their life stolen. From the basement of that hospital, people heard horrible voice downside. Our protagonist, a young reporter who believes in Occultism, puts a sword in his arm and sneaked into that basement to look for the ghost in the 301 hospital.
+                    <br /><br />
+                    Our hero, will you be able to slay the ghost?
+                </div>
+                <div class="button-container">
+                    <button id="start-game-button">Start</button>
+                </div>
+            </div>
+        </div>
     </div>
     <script src="./build/bundle.js"></script>
 </body>

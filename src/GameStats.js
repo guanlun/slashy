@@ -1,5 +1,15 @@
+let gameStarted = false;
+
 let heroMaxHP = 0;
 let heroHP = 0;
+
+export function startGame() {
+    gameStarted = true;
+}
+
+export function isGameStarted() {
+    return gameStarted;
+}
 
 export function setHeroMaxHP(maxHP) {
     heroMaxHP = maxHP;

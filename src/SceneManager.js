@@ -4,6 +4,7 @@ import HUD from './HUD';
 import MainCharManager from './MainCharManager';
 import ZombieBehavior from './ZombieBehavior';
 import MainCharBehavior from './MainCharBehavior';
+import { isGameStarted } from './GameStats';
 
 export default class SceneManager {
     constructor(loadedResources) {
@@ -15,7 +16,7 @@ export default class SceneManager {
         this.createCharacters();
         this.createBackground();
 
-        this.sceneContent.hud = this.hud = new HUD();
+        this.sceneContent.hud = this.hud = new HUD(this);
 
         this.renderer = new Renderer(this.sceneContent);
     }
@@ -68,11 +69,13 @@ export default class SceneManager {
     }
 
     update() {
-        for (const char of this.sceneContent.characters) {
-            char.update();
-        }
+        if (isGameStarted()) {
+            for (const char of this.sceneContent.characters) {
+                char.update();
+            }
 
-        this.renderer.render(this.sceneContent);
+            this.renderer.render(this.sceneContent);
+        }
 
         window.requestAnimationFrame(this.update.bind(this));
     }
