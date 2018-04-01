@@ -1,6 +1,7 @@
 import Character from "./Character";
 import Renderer from './Renderer';
-
+import HUD from './HUD';
+import MainCharManager from './MainCharManager';
 import ZombieBehavior from './ZombieBehavior';
 import MainCharBehavior from './MainCharBehavior';
 
@@ -14,6 +15,8 @@ export default class SceneManager {
         this.createCharacters();
         this.createBackground();
 
+        this.sceneContent.hud = this.hud = new HUD();
+
         this.renderer = new Renderer(this.sceneContent);
     }
 
@@ -23,6 +26,7 @@ export default class SceneManager {
             actionTemplate: this.loadedResources.characters['main'],
             behavior: new MainCharBehavior(),
             sceneManager: this,
+            mainCharManager: new MainCharManager(),
         });
 
         this.sceneContent.mainChar = mainChar;

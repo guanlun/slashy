@@ -24,6 +24,10 @@ export default class Renderer {
         this.renderCharacters(sceneContent.characters);
 
         this.ctx.restore();
+
+        if (sceneContent.hud) {
+            sceneContent.hud.render(this.ctx);
+        }
     }
 
     renderBackground(background, baseXPosition) {

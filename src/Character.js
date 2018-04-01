@@ -1,5 +1,5 @@
 import Collider from './Collider';
-import HealthManager from './HealthManager';
+import { setHeroHP, setHeroMaxHP } from './GameStats';
 import { loadCharacterSprites } from './SpriteLoader';
 import { ACTIONS, ATOMIC_ACTIONS, TERMINAL_ACTIONS, CONTINUING_ACTIONS } from './Constants';
 
@@ -20,6 +20,7 @@ export default class Character {
         position = { x: 0, y: 0 },
         behavior,
         sceneManager,
+        mainCharManager,
     }) {
         this.name = name;
 
@@ -36,6 +37,12 @@ export default class Character {
 
         this.sceneManager = sceneManager;
 
+        this.mainCharManager = mainCharManager;
+        if (mainCharManager) {
+            setHeroMaxHP(this.behavior.hp);
+            setHeroHP(this.behavior.hp);
+        }
+
         this.position = position || { x: 0, y: 0 };
 
         this.flipped = this.behavior.defaultFlipped;
@@ -44,7 +51,7 @@ export default class Character {
         this.dead = false;
 
         this.collider = new Collider(this);
-        this.healthManager = new HealthManager(this, behavior.hp);
+        this.hp = behavior.hp;
         this.sceneManager.registerCollider(this.collider);
     }
 
@@ -157,7 +164,15 @@ export default class Character {
     takeDamage(damage) {
         this.changeAction(ACTIONS.HURT);
 
-        this.healthManager.takeDamage(damage);
+        this.hp -= damage;
+
+        if (this.hp <= 0) {
+            this.changeAction(ACTIONS.DYING);
+        }
+
+        if (this.mainCharManager) {
+            this.mainCharManager.setHP(this.hp);
+        }
     }
 
     render(ctx) {
