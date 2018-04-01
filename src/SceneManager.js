@@ -1,10 +1,13 @@
 import Character from "./Character";
 import Renderer from './Renderer';
+import Ground from './Ground';
 import HUD from './HUD';
 import MainCharManager from './MainCharManager';
 import ZombieBehavior from './ZombieBehavior';
 import MainCharBehavior from './MainCharBehavior';
 import { isGameStarted } from './GameStats';
+
+const EPSILON = 0.001;
 
 export default class SceneManager {
     constructor(loadedResources) {
@@ -41,6 +44,13 @@ export default class SceneManager {
                 behavior: new ZombieBehavior(mainChar),
                 sceneManager: this,
             }),
+        ];
+
+        this.sceneContent.baseGround = new Ground({ x: -10000, y: 0 }, 20000);
+
+        this.sceneContent.grounds = [
+            this.sceneContent.baseGround,
+            new Ground({ x: 2, y: 1 }, 10),
         ];
 
         this.spawnZombie(300);
@@ -92,5 +102,30 @@ export default class SceneManager {
         for (const collider of this.colliders) {
             collider.checkWeaponAttackCollision(weaponCollider);
         }
+    }
+
+    getGroundForCharacter(character) {
+        let highestGroundYPos = -Number.MAX_VALUE;
+        let highestGround;
+
+        for (const ground of this.sceneContent.grounds) {
+            const charXPos = character.getCenterXPos();
+            const charYPos = character.position.y;
+            const groundRange = ground.getRange();
+            const groundYPos = ground.position.y;
+
+            if (charXPos < groundRange.from || charXPos > groundRange.to) {
+                continue;
+            }
+
+            if (charYPos - groundYPos > -EPSILON) {
+                if (groundYPos > highestGroundYPos) {
+                    highestGroundYPos = groundYPos;
+                    highestGround = ground;
+                }
+            }
+        }
+
+        return highestGround ? highestGround : this.sceneContent.baseGround;
     }
 }

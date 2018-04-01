@@ -1,5 +1,4 @@
-let gameStarted = false;
-
+let gameStarted = true//false;
 let heroMaxHP = 0;
 let heroHP = 0;
 
@@ -26,3 +25,4 @@ export function setHeroHP(hp) {
 export function getHeroHP() {
     return heroHP;
 }
+

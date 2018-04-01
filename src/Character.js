@@ -49,6 +49,7 @@ export default class Character {
 
         this.dying = false;
         this.dead = false;
+        this.yVel = 0;
 
         this.collider = new Collider(this);
         this.hp = behavior.hp;
@@ -104,17 +105,21 @@ export default class Character {
 
         const currActionAtomic = isAtomic(this.currAction);
 
-        if (this.jumping) {
-            if (this.jumpFrameIdx === 39) {
-                this.jumping = false;
-                this.position.y = 0;
-            } else {
-                this.yVel -= 0.1;
-                this.position.y -= this.yVel * 10;
-                this.jumpFrameIdx++;
-            }
+        const standingGround = this.findGround();
+        this.yVel -= 0.1;
+        this.position.y += this.yVel * 12;
 
-        } else if (currActionAtomic && this.actionCompleted) {
+        if (this.position.y < standingGround.position.y) {
+            // character became lower than the standing ground => landed
+            this.yVel = 0;
+            this.position.y = standingGround.position.y;
+
+            this.jumping = false;
+        } else {
+            this.jumping = true;
+        }
+
+        if (currActionAtomic && this.actionCompleted) {
             this.setAction(this.nextAction || ACTIONS.IDLE);
         }
 
@@ -151,6 +156,10 @@ export default class Character {
         }
     }
 
+    findGround() {
+        return this.sceneManager.getGroundForCharacter(this);
+    }
+
     startJumping() {
         if (this.jumping) {
             return;
@@ -158,7 +167,6 @@ export default class Character {
 
         this.jumping = true;
         this.yVel = 2.0;
-        this.jumpFrameIdx = 0;
     }
 
     takeDamage(damage) {
@@ -178,7 +186,10 @@ export default class Character {
     render(ctx) {
         ctx.save();
 
-        ctx.translate(this.position.x, this.position.y);
+        ctx.translate(this.position.x, -this.position.y);
+
+        ctx.fillStyle = 'red';
+        ctx.strokeRect(0, 0, 100, 100);
 
         if (this.flipped) {
             ctx.scale(-1, 1);
@@ -194,5 +205,9 @@ export default class Character {
         );
 
         ctx.restore();
+    }
+
+    getCenterXPos() {
+        return this.position.x + this.behavior.centerXOffset;
     }
 }

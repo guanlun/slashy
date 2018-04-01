@@ -1,4 +1,5 @@
 const CHAR_POS_OFFSET_Y = 250;
+const GROUND_ZERO_Y = 410;
 
 export default class Renderer {
     constructor(sceneContent) {
@@ -21,6 +22,7 @@ export default class Renderer {
         this.ctx.translate(-baseXPosition, 0);
 
         this.renderBackground(this.backgroundPattern, baseXPosition);
+        this.renderGrounds(sceneContent.grounds);
         this.renderCharacters(sceneContent.characters);
 
         this.ctx.restore();
@@ -42,6 +44,18 @@ export default class Renderer {
 
         for (const char of characters) {
             char.render(this.ctx);
+        }
+
+        this.ctx.restore();
+    }
+
+    renderGrounds(grounds) {
+        this.ctx.save();
+
+        this.ctx.translate(0, GROUND_ZERO_Y);
+
+        for (const ground of grounds) {
+            ground.render(this.ctx);
         }
 
         this.ctx.restore();

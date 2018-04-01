@@ -77,22 +77,22 @@ document.addEventListener('keyup', evt => {
     }
 });
 
-const wsAddr = `ws://${Config.WS_SERVER_IP}:${Config.WS_SERVER_PORT}`;
+// const wsAddr = `ws://${Config.WS_SERVER_IP}:${Config.WS_SERVER_PORT}`;
 
-const wsConn = new WebSocket(wsAddr);
-wsConn.onopen = _ => {
-    console.log('connected to ws server');
-}
+// const wsConn = new WebSocket(wsAddr);
+// wsConn.onopen = _ => {
+//     console.log('connected to ws server');
+// }
 
-const indicator = document.querySelector('#main')
+// const indicator = document.querySelector('#main')
 
-wsConn.onmessage = msg => {
-    console.log(msg)
-    if (msg.data === 'hack') {
-        mainChar.attack();
-    }
-}
+// wsConn.onmessage = msg => {
+//     console.log(msg)
+//     if (msg.data === 'hack') {
+//         mainChar.attack();
+//     }
+// }
 
-wsConn.onerror = () => {
-    console.log('error')
-}
+// wsConn.onerror = () => {
+//     console.log('error')
+// }
