@@ -1,3 +1,5 @@
+import { BOSS_CUTSCENE_X_POSITION } from './Constants';
+
 const CHAR_POS_OFFSET_Y = 250;
 const GROUND_ZERO_Y = 410;
 
@@ -12,13 +14,14 @@ export default class Renderer {
         this.canvas.height = 600;
     }
 
-    render(sceneContent) {
+    render(sceneContent, bossEncountered = false, cutsceneTransitionFraction = 0) {
         this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
-
-        const baseXPosition = sceneContent.mainChar.position.x - this.canvas.width / 2 + 160;
 
         this.ctx.save();
 
+        const baseXPosition =
+            (1 - cutsceneTransitionFraction) * (sceneContent.mainChar.position.x - this.canvas.width / 2 + 160)
+            + cutsceneTransitionFraction * BOSS_CUTSCENE_X_POSITION;
         this.ctx.translate(-baseXPosition, 0);
 
         this.renderBackground(this.backgroundPattern, baseXPosition);

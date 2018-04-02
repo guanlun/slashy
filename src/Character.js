@@ -1,7 +1,7 @@
 import Collider from './Collider';
-import { setHeroHP, setHeroMaxHP } from './GameStats';
+import { setHeroHP, setHeroMaxHP, getPaused } from './GameStats';
 import { loadCharacterSprites } from './SpriteLoader';
-import { ACTIONS, ATOMIC_ACTIONS, TERMINAL_ACTIONS, CONTINUING_ACTIONS } from './Constants';
+import { ACTIONS, ATOMIC_ACTIONS, TERMINAL_ACTIONS, CONTINUING_ACTIONS, BOSS_CUTSCENE_X_POSITION, BOSS_X_POSITION } from './Constants';
 
 function isAtomic(action) {
     return ATOMIC_ACTIONS.indexOf(action) !== -1;
@@ -123,16 +123,26 @@ export default class Character {
             this.setAction(this.nextAction || ACTIONS.IDLE);
         }
 
-        // TODO: move to behavior classes?
-        switch (this.currAction) {
-            case ACTIONS.WALK:
-                this.position.x += this.flipped ? -this.behavior.walkingSpeed : this.behavior.walkingSpeed;
-                break;
-            case ACTIONS.ATTACK:
-                if (this.actionFrameIdx === 10 && this.frameSkipCount === 0) {
-                    this.sceneManager.checkAttackCollision(this.collider);
-                }
-                break;
+        if (!getPaused()) {
+            // TODO: move to behavior classes?
+            switch (this.currAction) {
+                case ACTIONS.WALK:
+                    this.position.x += this.flipped ? -this.behavior.walkingSpeed : this.behavior.walkingSpeed;
+
+                    if (this.sceneManager.bossEncountered) {
+                        if (this.position.x < BOSS_CUTSCENE_X_POSITION) {
+                            this.position.x = BOSS_CUTSCENE_X_POSITION;
+                        } else if (this.position.x > BOSS_X_POSITION) {
+                            this.position.x = BOSS_X_POSITION;
+                        }
+                    }
+                    break;
+                case ACTIONS.ATTACK:
+                    if (this.actionFrameIdx === 10 && this.frameSkipCount === 0) {
+                        this.sceneManager.checkAttackCollision(this.collider);
+                    }
+                    break;
+            }
         }
 
         this.frameSkipCount++;
@@ -187,9 +197,6 @@ export default class Character {
         ctx.save();
 
         ctx.translate(this.position.x, -this.position.y);
-
-        ctx.fillStyle = 'red';
-        ctx.strokeRect(0, 0, 100, 100);
 
         if (this.flipped) {
             ctx.scale(-1, 1);

@@ -5,7 +5,8 @@ import HUD from './HUD';
 import MainCharManager from './MainCharManager';
 import ZombieBehavior from './ZombieBehavior';
 import MainCharBehavior from './MainCharBehavior';
-import { isGameStarted } from './GameStats';
+import { isGameStarted, setPaused } from './GameStats';
+import { BOSS_CUTSCENE_FRAME_LENGTH, BOSS_CUTSCENE_X_POSITION, BOSS_CUTSCENE_X_POSITION, BOSS_X_POSITION } from './Constants';
 
 const EPSILON = 0.001;
 
@@ -22,6 +23,9 @@ export default class SceneManager {
         this.sceneContent.hud = this.hud = new HUD(this);
 
         this.renderer = new Renderer(this.sceneContent);
+
+        this.bossEncountered = false;
+        this.cutsceneFrameIdx = 0;
     }
 
     createCharacters() {
@@ -40,7 +44,7 @@ export default class SceneManager {
             new Character({
                 name: 'frog',
                 actionTemplate: this.loadedResources.characters['frog'],
-                position: { x: 1200, y: 0 },
+                position: { x: BOSS_X_POSITION, y: 0 },
                 behavior: new ZombieBehavior(mainChar),
                 sceneManager: this,
             }),
@@ -80,11 +84,27 @@ export default class SceneManager {
 
     update() {
         if (isGameStarted()) {
+            if (this.bossEncountered) {
+                if (this.cutsceneFrameIdx < BOSS_CUTSCENE_FRAME_LENGTH) {
+                    this.cutsceneFrameIdx++;
+                } else {
+                    setPaused(false);
+                }
+            } else {
+                if (this.sceneContent.mainChar.position.x > BOSS_CUTSCENE_X_POSITION) {
+                    this.bossEncountered = true;
+
+                    setPaused(true);
+
+                    this.cutsceneFrameIdx = 0;
+                }
+            }
+
             for (const char of this.sceneContent.characters) {
                 char.update();
             }
 
-            this.renderer.render(this.sceneContent);
+            this.renderer.render(this.sceneContent, this.bossEncountered, this.cutsceneFrameIdx / BOSS_CUTSCENE_FRAME_LENGTH);
         }
 
         window.requestAnimationFrame(this.update.bind(this));

@@ -1,6 +1,7 @@
 let gameStarted = true//false;
 let heroMaxHP = 0;
 let heroHP = 0;
+let paused = false;
 
 export function startGame() {
     gameStarted = true;
@@ -26,3 +27,10 @@ export function getHeroHP() {
     return heroHP;
 }
 
+export function setPaused(p) {
+    paused = p;
+}
+
+export function getPaused() {
+    return paused;
+}
