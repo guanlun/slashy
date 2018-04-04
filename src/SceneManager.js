@@ -6,8 +6,9 @@ import MainCharManager from './MainCharManager';
 import ZombieBehavior from './ZombieBehavior';
 import FrogBehavior from './FrogBehavior';
 import MainCharBehavior from './MainCharBehavior';
+import Projectile from './Projectile';
 import { isGameStarted, setPaused } from './GameStats';
-import { BOSS_CUTSCENE_FRAME_LENGTH, BOSS_CUTSCENE_X_POSITION, BOSS_CUTSCENE_X_POSITION, BOSS_X_POSITION } from './Constants';
+import { ITEM_TYPES, BOSS_CUTSCENE_FRAME_LENGTH, BOSS_CUTSCENE_X_POSITION, BOSS_CUTSCENE_X_POSITION, BOSS_X_POSITION } from './Constants';
 
 const EPSILON = 0.001;
 
@@ -79,8 +80,12 @@ export default class SceneManager {
         );
     }
 
-    spawnItem(item) {
-        this.sceneContent.items.push(item);
+    spawnItem(fromCharacter, itemSpec) {
+        switch (itemSpec.type) {
+            case ITEM_TYPES.PROJECTILE:
+                this.sceneContent.items.push(new Projectile(itemSpec.position, itemSpec.velocity, this.loadedResources.item.FIRE_SHOOT, fromCharacter));
+                break;
+        }
     }
 
     createBackground() {

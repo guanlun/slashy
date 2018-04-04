@@ -1,7 +1,8 @@
 export default class Item {
-    constructor(position, velocity = { x: 0, y: 0 }) {
+    constructor(position, velocity = { x: 0, y: 0 }, image) {
         this.position = position;
         this.velocity = velocity;
+        this.image = image;
 
         this.defunct = false;
     }
@@ -29,9 +30,11 @@ export default class Item {
         ctx.save();
 
         ctx.translate(this.position.x, this.position.y);
+        if (this.velocity.x < 0) {
+            ctx.scale(-1, 1);
+        }
 
-        ctx.fillStyle = 'red';
-        ctx.fillRect(0, 0, 30, 30);
+        ctx.drawImage(this.image, 0, 0, this.velocity.x < 0 ? -50 : 50, 30);
 
         ctx.restore();
     }

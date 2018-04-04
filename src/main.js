@@ -38,10 +38,15 @@ const CHARACTERS = {
     },
 };
 
+const ITEMS = {
+    FIRE_SHOOT: 'Fire-Shoot',
+};
+
 let background = null;
 
 loadResources({
     characters: CHARACTERS,
+    items: ITEMS,
     background: 'seamless-bg',
 }).then(loadedResources => {
     const sceneManager = new SceneManager(loadedResources);

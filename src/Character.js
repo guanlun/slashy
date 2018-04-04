@@ -143,6 +143,11 @@ export default class Character {
                         this.behavior.performAttack(this.sceneManager);
                     }
                     break;
+                case ACTIONS.DEAD:
+                    if (this.behavior.riseWhenDead) {
+
+                    }
+                    break;
             }
         }
 
@@ -197,7 +202,7 @@ export default class Character {
     render(ctx) {
         ctx.save();
 
-        ctx.translate(this.position.x, -this.position.y);
+        ctx.translate(this.position.x, -this.position.y + this.behavior.yRenderOffset);
 
         if (this.flipped) {
             ctx.scale(-1, 1);
@@ -209,14 +214,15 @@ export default class Character {
             currActionSequence[this.actionFrameIdx],
             0,
             0,
-            this.flipped ? -200 : 200, 200
+            this.flipped ? -200 : 200,
+            200
         );
 
         ctx.restore();
     }
 
-    spawnItem(item) {
-        this.sceneManager.spawnItem(item);
+    spawnItem(itemSpec) {
+        this.sceneManager.spawnItem(this, itemSpec);
     }
 
     getCenterXPos() {

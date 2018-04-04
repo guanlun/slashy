@@ -1,8 +1,8 @@
 import Item from './Item';
 
 export default class Projectile extends Item {
-    constructor(position, velocity, parent) {
-        super(position, velocity);
+    constructor(position, velocity, image, parent) {
+        super(position, velocity, image);
         this.parent = parent;
     }
 
@@ -17,6 +17,8 @@ export default class Projectile extends Item {
             }
 
             const yDiff = Math.abs(char.position.y - this.position.y);
+
+
             const xDiff = this.position.x - char.position.x;
 
             if (yDiff < 30 && xDiff < 150 && xDiff > 0) {
@@ -25,6 +27,4 @@ export default class Projectile extends Item {
             }
         }
     }
-
-
 }

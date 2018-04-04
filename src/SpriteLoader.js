@@ -1,11 +1,13 @@
 const SPRITE_DIR = '../images/sprites';
+const ITEM_DIR = '../images/item';
 const BG_DIR = '../images/bg';
 
-export function loadResources({ characters, background }) {
+export function loadResources({ characters, items, background }) {
     const loadedResources = {};
 
     return Promise.all([
         loadAllCharacterSprites(characters),
+        loadItemSprites(items),
         loadBackground(background),
     ]).then(resources => {
         for (const res of resources) {
@@ -53,6 +55,24 @@ function loadCharacterSprites(characterName, characterSpec) {
         return {
             characterName,
             sprites: actionMap,
+        };
+    });
+}
+
+function loadItemSprites(items) {
+    return Promise.all(
+        Object.keys(items).map(
+            name => loadImage(`${ITEM_DIR}/${items[name]}.png`).then(img => ({ name, img }))
+        )
+    ).then(items => {
+        const itemImageMap = {};
+        for (const item of items) {
+            itemImageMap[item.name] = item.img;
+        }
+
+        return {
+            type: 'item',
+            data: itemImageMap,
         };
     });
 }

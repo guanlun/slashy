@@ -1,6 +1,5 @@
 import BaseBehavior from './BaseBehavior';
-import { ACTIONS } from './Constants';
-import Projectile from './Projectile';
+import { ACTIONS, ITEM_TYPES } from './Constants';
 
 const MAX_DETECT_DISTANCE = 1000;
 const MAX_ATTACK_DISTANCE = 1000;
@@ -19,6 +18,8 @@ export default class FrogBehavior extends BaseBehavior {
         this.hp = 1000;
         this.animationFrameLength = 4;
         this.attackFrameInSequence = 1;
+        this.riseWhenDead = true;
+        this.yRenderOffset = -30;
     }
 
     update() {
@@ -52,9 +53,14 @@ export default class FrogBehavior extends BaseBehavior {
     performAttack(sceneManager) {
         const position = {
             x: this.character.position.x,
-            y: this.character.position.y,
+            y: this.character.position.y + 30,
         }
-        this.character.spawnItem(new Projectile(position, { x: -6, y: 0 }, this.character));
+        // this.character.spawnItem(new Projectile(position, { x: -12, y: 0 }, this.character));
+        this.character.spawnItem({
+            type: ITEM_TYPES.PROJECTILE,
+            position,
+            velocity: { x: -12, y: 0 },
+        });
     }
 
     isCoolingDown(currTime) {

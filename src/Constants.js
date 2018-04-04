@@ -22,6 +22,10 @@ export const TERMINAL_ACTIONS = [
     ACTIONS.DYING,
 ];
 
+export const ITEM_TYPES = {
+    PROJECTILE: 'projectile',
+};
+
 export const BOSS_CUTSCENE_FRAME_LENGTH = 20;
 
 export const BOSS_CUTSCENE_X_POSITION = 400;
