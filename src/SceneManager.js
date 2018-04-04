@@ -4,6 +4,7 @@ import Ground from './Ground';
 import HUD from './HUD';
 import MainCharManager from './MainCharManager';
 import ZombieBehavior from './ZombieBehavior';
+import FrogBehavior from './FrogBehavior';
 import MainCharBehavior from './MainCharBehavior';
 import { isGameStarted, setPaused } from './GameStats';
 import { BOSS_CUTSCENE_FRAME_LENGTH, BOSS_CUTSCENE_X_POSITION, BOSS_CUTSCENE_X_POSITION, BOSS_X_POSITION } from './Constants';
@@ -45,10 +46,12 @@ export default class SceneManager {
                 name: 'frog',
                 actionTemplate: this.loadedResources.characters['frog'],
                 position: { x: BOSS_X_POSITION, y: 0 },
-                behavior: new ZombieBehavior(mainChar),
+                behavior: new FrogBehavior(mainChar),
                 sceneManager: this,
             }),
         ];
+
+        this.sceneContent.items = [];
 
         this.sceneContent.baseGround = new Ground({ x: -10000, y: 0 }, 20000);
 
@@ -57,9 +60,9 @@ export default class SceneManager {
             new Ground({ x: 2, y: 1 }, 10),
         ];
 
-        this.spawnZombie(300);
-        this.spawnZombie(600);
-        this.spawnZombie(900);
+        // this.spawnZombie(500);
+        // this.spawnZombie(900);
+        // this.spawnZombie(1300);
     }
 
     spawnZombie(xPosition) {
@@ -74,6 +77,10 @@ export default class SceneManager {
                 sceneManager: this,
             }),
         );
+    }
+
+    spawnItem(item) {
+        this.sceneContent.items.push(item);
     }
 
     createBackground() {
@@ -102,6 +109,10 @@ export default class SceneManager {
 
             for (const char of this.sceneContent.characters) {
                 char.update();
+            }
+
+            for (const item of this.sceneContent.items) {
+                item.update(this.sceneContent.characters);
             }
 
             this.renderer.render(this.sceneContent, this.bossEncountered, this.cutsceneFrameIdx / BOSS_CUTSCENE_FRAME_LENGTH);

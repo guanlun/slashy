@@ -1,6 +1,7 @@
 import { BOSS_CUTSCENE_X_POSITION } from './Constants';
 
 const CHAR_POS_OFFSET_Y = 250;
+const ITEM_POS_OFFSET_Y = 320;
 const GROUND_ZERO_Y = 410;
 
 export default class Renderer {
@@ -27,6 +28,7 @@ export default class Renderer {
         this.renderBackground(this.backgroundPattern, baseXPosition);
         this.renderGrounds(sceneContent.grounds);
         this.renderCharacters(sceneContent.characters);
+        this.renderItems(sceneContent.items);
 
         this.ctx.restore();
 
@@ -59,6 +61,18 @@ export default class Renderer {
 
         for (const ground of grounds) {
             ground.render(this.ctx);
+        }
+
+        this.ctx.restore();
+    }
+
+    renderItems(items) {
+        this.ctx.save();
+
+        this.ctx.translate(0, ITEM_POS_OFFSET_Y);
+
+        for (const item of items) {
+            item.render(this.ctx);
         }
 
         this.ctx.restore();

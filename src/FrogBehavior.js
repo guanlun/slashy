@@ -1,12 +1,13 @@
 import BaseBehavior from './BaseBehavior';
 import { ACTIONS } from './Constants';
+import Projectile from './Projectile';
 
-const MAX_DETECT_DISTANCE = 200;
-const MAX_ATTACK_DISTANCE = 90;
+const MAX_DETECT_DISTANCE = 1000;
+const MAX_ATTACK_DISTANCE = 1000;
 
 const ATTACK_COOLDOWN = 2000;
 
-export default class ZombieBehavior extends BaseBehavior {
+export default class FrogBehavior extends BaseBehavior {
     constructor(target) {
         super();
         this.defaultFlipped = true;
@@ -14,8 +15,10 @@ export default class ZombieBehavior extends BaseBehavior {
 
         this.lastAttackTime = 0;
 
-        this.walkingSpeed = 3;
-        this.hp = 500;
+        this.walkingSpeed = 5;
+        this.hp = 1000;
+        this.animationFrameLength = 4;
+        this.attackFrameInSequence = 1;
     }
 
     update() {
@@ -36,7 +39,6 @@ export default class ZombieBehavior extends BaseBehavior {
         } else if (xDiff >= -MAX_ATTACK_DISTANCE && xDiff <= MAX_ATTACK_DISTANCE) {
             const currTime = Date.now();
 
-            // console.log(currTime - this.lastAttackTime)
             if (currTime - this.lastAttackTime > ATTACK_COOLDOWN) {
                 this.character.changeAction(ACTIONS.ATTACK);
 
@@ -45,6 +47,14 @@ export default class ZombieBehavior extends BaseBehavior {
                 this.character.changeAction(ACTIONS.IDLE);
             }
         }
+    }
+
+    performAttack(sceneManager) {
+        const position = {
+            x: this.character.position.x,
+            y: this.character.position.y,
+        }
+        this.character.spawnItem(new Projectile(position, { x: -6, y: 0 }, this.character));
     }
 
     isCoolingDown(currTime) {

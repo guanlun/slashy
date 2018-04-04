@@ -120,6 +120,7 @@ export default class Character {
         }
 
         if (currActionAtomic && this.actionCompleted) {
+            // console.log(this.nextAction)
             this.setAction(this.nextAction || ACTIONS.IDLE);
         }
 
@@ -138,15 +139,15 @@ export default class Character {
                     }
                     break;
                 case ACTIONS.ATTACK:
-                    if (this.actionFrameIdx === 10 && this.frameSkipCount === 0) {
-                        this.sceneManager.checkAttackCollision(this.collider);
+                    if (this.frameSkipCount === 0 && this.actionFrameIdx === this.behavior.attackFrameInSequence) {
+                        this.behavior.performAttack(this.sceneManager);
                     }
                     break;
             }
         }
 
         this.frameSkipCount++;
-        if (this.frameSkipCount === REFRESH_PER_FRAME) {
+        if (this.frameSkipCount === REFRESH_PER_FRAME * this.behavior.animationFrameLength) {
             this.frameSkipCount = 0;
 
             this.actionFrameIdx++;
@@ -212,6 +213,10 @@ export default class Character {
         );
 
         ctx.restore();
+    }
+
+    spawnItem(item) {
+        this.sceneManager.spawnItem(item);
     }
 
     getCenterXPos() {
