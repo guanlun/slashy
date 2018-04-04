@@ -20,6 +20,8 @@ export default class FrogBehavior extends BaseBehavior {
         this.attackFrameInSequence = 1;
         this.riseWhenDead = true;
         this.yRenderOffset = -30;
+
+        this.attackFrameCounter = 0;
     }
 
     update() {
@@ -31,23 +33,35 @@ export default class FrogBehavior extends BaseBehavior {
 
         const xDiff = this.character.position.x - targetPos.x;
 
-        this.character.flipped = xDiff > 0;
 
-        if (xDiff < MAX_DETECT_DISTANCE && xDiff > MAX_ATTACK_DISTANCE) {
-            this.character.changeAction(ACTIONS.WALK);
-        } else if (xDiff > -MAX_DETECT_DISTANCE && xDiff < -MAX_ATTACK_DISTANCE) {
-            this.character.changeAction(ACTIONS.WALK);
-        } else if (xDiff >= -MAX_ATTACK_DISTANCE && xDiff <= MAX_ATTACK_DISTANCE) {
-            const currTime = Date.now();
+        this.character.changeAction(ACTIONS.WALK);
 
-            if (currTime - this.lastAttackTime > ATTACK_COOLDOWN) {
-                this.character.changeAction(ACTIONS.ATTACK);
-
-                this.lastAttackTime = currTime;
-            } else {
-                this.character.changeAction(ACTIONS.IDLE);
-            }
+        if (this.attackFrameCounter === 0) {
+            this.character.changeAction(ACTIONS.ATTACK);
+            this.attackFrameCounter = Math.floor(Math.random() * 80 + 60);
+        } else {
+            this.attackFrameCounter--;
         }
+
+        // if (xDiff < MAX_DETECT_DISTANCE && xDiff > MAX_ATTACK_DISTANCE) {
+        //     this.character.changeAction(ACTIONS.WALK);
+        // } else if (xDiff > -MAX_DETECT_DISTANCE && xDiff < -MAX_ATTACK_DISTANCE) {
+        //     this.character.changeAction(ACTIONS.WALK);
+        // } else if (xDiff >= -MAX_ATTACK_DISTANCE && xDiff <= MAX_ATTACK_DISTANCE) {
+        //     const currTime = Date.now();
+
+        //     if (currTime - this.lastAttackTime > ATTACK_COOLDOWN) {
+        //         this.character.changeAction(ACTIONS.ATTACK);
+
+        //         this.lastAttackTime = currTime;
+        //     } else {
+        //         this.character.changeAction(ACTIONS.IDLE);
+        //     }
+        // }
+    }
+
+    onReachedBoundary() {
+        this.character.flipped = !this.character.flipped;
     }
 
     performAttack(sceneManager) {
@@ -55,11 +69,11 @@ export default class FrogBehavior extends BaseBehavior {
             x: this.character.position.x,
             y: this.character.position.y + 30,
         }
-        // this.character.spawnItem(new Projectile(position, { x: -12, y: 0 }, this.character));
+
         this.character.spawnItem({
             type: ITEM_TYPES.PROJECTILE,
             position,
-            velocity: { x: -12, y: 0 },
+            velocity: { x: this.character.flipped ? -12 : 12, y: 0 },
         });
     }
 

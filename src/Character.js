@@ -133,8 +133,10 @@ export default class Character {
                     if (this.sceneManager.bossEncountered) {
                         if (this.position.x < BOSS_CUTSCENE_X_POSITION) {
                             this.position.x = BOSS_CUTSCENE_X_POSITION;
+                            this.behavior.onReachedBoundary();
                         } else if (this.position.x > BOSS_X_POSITION) {
                             this.position.x = BOSS_X_POSITION;
+                            this.behavior.onReachedBoundary();
                         }
                     }
                     break;

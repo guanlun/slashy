@@ -19,4 +19,8 @@ export default class BaseBehavior {
     performAttack(sceneManager) {
         sceneManager.checkAttackCollision(this.character.collider);
     }
+
+    onReachedBoundary() {
+
+    }
 }
