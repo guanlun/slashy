@@ -24,9 +24,10 @@ export const TERMINAL_ACTIONS = [
 
 export const ITEM_TYPES = {
     PROJECTILE: 'projectile',
+    HEALTH_POTION: 'health-potion',
 };
 
 export const BOSS_CUTSCENE_FRAME_LENGTH = 20;
 
-export const BOSS_CUTSCENE_X_POSITION = 400;
+export const BOSS_CUTSCENE_X_POSITION = 1000;
 export const BOSS_X_POSITION = BOSS_CUTSCENE_X_POSITION + 1200;

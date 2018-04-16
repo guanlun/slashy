@@ -40,6 +40,7 @@ const CHARACTERS = {
 
 const ITEMS = {
     FIRE_SHOOT: 'Fire-Shoot',
+    HEALTH_POTION: 'Health-Potion',
 };
 
 let background = null;

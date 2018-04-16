@@ -7,6 +7,7 @@ import ZombieBehavior from './ZombieBehavior';
 import FrogBehavior from './FrogBehavior';
 import MainCharBehavior from './MainCharBehavior';
 import Projectile from './Projectile';
+import Potion from './Potion';
 import { isGameStarted, setPaused } from './GameStats';
 import { ITEM_TYPES, BOSS_CUTSCENE_FRAME_LENGTH, BOSS_CUTSCENE_X_POSITION, BOSS_CUTSCENE_X_POSITION, BOSS_X_POSITION } from './Constants';
 
@@ -61,7 +62,7 @@ export default class SceneManager {
             new Ground({ x: 2, y: 1 }, 10),
         ];
 
-        // this.spawnZombie(500);
+        this.spawnZombie(500);
         // this.spawnZombie(900);
         // this.spawnZombie(1300);
     }
@@ -83,7 +84,10 @@ export default class SceneManager {
     spawnItem(fromCharacter, itemSpec) {
         switch (itemSpec.type) {
             case ITEM_TYPES.PROJECTILE:
-                this.sceneContent.items.push(new Projectile(itemSpec.position, itemSpec.velocity, this.loadedResources.item.FIRE_SHOOT, fromCharacter));
+                this.sceneContent.items.push(new Projectile(this, itemSpec.position, itemSpec.velocity, this.loadedResources.item.FIRE_SHOOT, fromCharacter));
+                break;
+            case ITEM_TYPES.HEALTH_POTION:
+                this.sceneContent.items.push(new Potion(this, itemSpec.position, itemSpec.velocity, this.loadedResources.item.HEALTH_POTION));
                 break;
         }
     }
@@ -140,21 +144,19 @@ export default class SceneManager {
         }
     }
 
-    getGroundForCharacter(character) {
+    getGroundForPosition(position) {
         let highestGroundYPos = -Number.MAX_VALUE;
         let highestGround;
 
         for (const ground of this.sceneContent.grounds) {
-            const charXPos = character.getCenterXPos();
-            const charYPos = character.position.y;
             const groundRange = ground.getRange();
             const groundYPos = ground.position.y;
 
-            if (charXPos < groundRange.from || charXPos > groundRange.to) {
+            if (position.x < groundRange.from || position.x > groundRange.to) {
                 continue;
             }
 
-            if (charYPos - groundYPos > -EPSILON) {
+            if (position.y - groundYPos > -EPSILON) {
                 if (groundYPos > highestGroundYPos) {
                     highestGroundYPos = groundYPos;
                     highestGround = ground;

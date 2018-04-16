@@ -1,9 +1,13 @@
 import Item from './Item';
 
 export default class Projectile extends Item {
-    constructor(sceneManager, position, velocity, image, parent) {
+    constructor(sceneManager, position, velocity, image) {
         super(sceneManager, position, velocity, image);
-        this.parent = parent;
+        this.hasGravity = true;
+    }
+
+    customScale(ctx) {
+        ctx.scale(3, 3);
     }
 
     checkCharacterCollision(characters) {
@@ -12,15 +16,11 @@ export default class Projectile extends Item {
         }
 
         for (const char of characters) {
-            if (char === this.parent) {
-                continue;
-            }
-
             const yDiff = this.position.y - char.position.y;
             const xDiff = this.position.x - char.position.x;
 
-            if (yDiff > 0 && yDiff < 100 && xDiff < 150 && xDiff > 0) {
-                char.takeDamage(100);
+            if (yDiff > -10 && yDiff < 10 && xDiff < 30 && xDiff > -30) {
+                char.heal(100);
                 this.defunct = true;
             }
         }

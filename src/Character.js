@@ -175,7 +175,10 @@ export default class Character {
     }
 
     findGround() {
-        return this.sceneManager.getGroundForCharacter(this);
+        return this.sceneManager.getGroundForPosition({
+            x: this.getCenterXPos(),
+            y: this.position.y,
+        });
     }
 
     startJumping() {
@@ -187,6 +190,14 @@ export default class Character {
         this.yVel = 2.0;
     }
 
+    heal(amount) {
+        this.hp = Math.min(this.behavior.hp, this.hp + amount);
+
+        if (this.mainCharManager) {
+            this.mainCharManager.setHP(this.hp);
+        }
+    }
+
     takeDamage(damage) {
         this.changeAction(ACTIONS.HURT);
 
@@ -194,6 +205,7 @@ export default class Character {
 
         if (this.hp <= 0) {
             this.changeAction(ACTIONS.DYING);
+            this.behavior.die();
         }
 
         if (this.mainCharManager) {

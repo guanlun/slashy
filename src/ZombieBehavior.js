@@ -1,5 +1,5 @@
 import BaseBehavior from './BaseBehavior';
-import { ACTIONS } from './Constants';
+import { ACTIONS, ITEM_TYPES } from './Constants';
 
 const MAX_DETECT_DISTANCE = 200;
 const MAX_ATTACK_DISTANCE = 90;
@@ -15,7 +15,7 @@ export default class ZombieBehavior extends BaseBehavior {
         this.lastAttackTime = 0;
 
         this.walkingSpeed = 3;
-        this.hp = 500;
+        this.hp = 1;
     }
 
     update() {
@@ -45,6 +45,19 @@ export default class ZombieBehavior extends BaseBehavior {
                 this.character.changeAction(ACTIONS.IDLE);
             }
         }
+    }
+
+    die() {
+        const position = {
+            x: this.character.position.x,
+            y: this.character.position.y,
+        }
+
+        this.character.spawnItem({
+            type: ITEM_TYPES.HEALTH_POTION,
+            position,
+            velocity: { x: 6, y: -12 },
+        });
     }
 
     isCoolingDown(currTime) {

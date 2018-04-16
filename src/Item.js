@@ -1,10 +1,12 @@
 export default class Item {
-    constructor(position, velocity = { x: 0, y: 0 }, image) {
+    constructor(sceneManager, position, velocity = { x: 0, y: 0 }, image) {
+        this.sceneManager = sceneManager;
         this.position = position;
         this.velocity = velocity;
         this.image = image;
 
         this.defunct = false;
+        this.isStill = false;
     }
 
     update(characters) {
@@ -12,8 +14,21 @@ export default class Item {
             return;
         }
 
-        this.position.x += this.velocity.x;
-        this.position.y += this.velocity.y;
+        if (!this.isStill) {
+            if (this.hasGravity) {
+                this.velocity.y += 0.8;
+            }
+
+            const restingGround = this.sceneManager.getGroundForPosition(this.position);
+
+            this.position.x += this.velocity.x;
+            this.position.y += this.velocity.y;
+
+            if (this.hasGravity && this.position.y > restingGround.position.y) {
+                this.position.y = restingGround.position.y;
+                this.isStill = true;
+            }
+        }
 
         this.checkCharacterCollision(characters);
     }
@@ -34,8 +49,13 @@ export default class Item {
             ctx.scale(-1, 1);
         }
 
+        this.customScale(ctx);
+
         ctx.drawImage(this.image, 0, 0, this.velocity.x < 0 ? -50 : 50, 30);
 
         ctx.restore();
+    }
+
+    customScale(ctx) {
     }
 }

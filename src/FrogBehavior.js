@@ -25,7 +25,7 @@ export default class FrogBehavior extends BaseBehavior {
     }
 
     update() {
-        if (this.character.dead) {
+        if (this.character.dead || !this.target.sceneManager.bossEncountered) {
             return;
         }
 
@@ -33,12 +33,11 @@ export default class FrogBehavior extends BaseBehavior {
 
         const xDiff = this.character.position.x - targetPos.x;
 
-
         this.character.changeAction(ACTIONS.WALK);
 
         if (this.attackFrameCounter === 0) {
             this.character.changeAction(ACTIONS.ATTACK);
-            this.attackFrameCounter = Math.floor(Math.random() * 80 + 60);
+            this.attackFrameCounter = Math.floor(Math.random() * 100 + 40);
         } else {
             this.attackFrameCounter--;
         }
