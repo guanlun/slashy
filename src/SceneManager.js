@@ -8,6 +8,7 @@ import FrogBehavior from './FrogBehavior';
 import MainCharBehavior from './MainCharBehavior';
 import Projectile from './Projectile';
 import Potion from './Potion';
+import { ACTIONS } from './Constants';
 import { isGameStarted, setPaused } from './GameStats';
 import { ITEM_TYPES, BOSS_CUTSCENE_FRAME_LENGTH, BOSS_CUTSCENE_X_POSITION, BOSS_CUTSCENE_X_POSITION, BOSS_X_POSITION } from './Constants';
 
@@ -27,8 +28,10 @@ export default class SceneManager {
 
         this.renderer = new Renderer(this.sceneContent);
 
+        this.gameStarted = false;
         this.bossEncountered = false;
         this.cutsceneFrameIdx = 0;
+        this.mainCharDead = false;
     }
 
     createCharacters() {
@@ -55,16 +58,25 @@ export default class SceneManager {
 
         this.sceneContent.items = [];
 
-        this.sceneContent.baseGround = new Ground({ x: -10000, y: 0 }, 20000);
+        this.sceneContent.baseGround = new Ground({ x: -10000, y: 0 }, 20000, this.loadedResources.ground);
 
         this.sceneContent.grounds = [
             this.sceneContent.baseGround,
-            new Ground({ x: 2, y: 1 }, 10),
+            new Ground({ x: 2, y: 1 }, 10, this.loadedResources.ground),
         ];
 
         this.spawnZombie(500);
-        // this.spawnZombie(900);
-        // this.spawnZombie(1300);
+        this.spawnZombie(900);
+        this.spawnZombie(1300);
+    }
+
+    getMainCharHpRatio() {
+        const mainChar = this.sceneContent.mainChar;
+        return mainChar.hp / mainChar.behavior.hp;
+    }
+
+    respawn() {
+        this.sceneContent.mainChar.respawn();
     }
 
     spawnZombie(xPosition) {
@@ -98,8 +110,19 @@ export default class SceneManager {
         };
     }
 
+    setMainCharDead(dead) {
+        this.mainCharDead = dead;
+        if (dead) {
+            this.sceneContent.hud.showDeadMenu();
+        }
+    }
+
+    startGame() {
+        this.gameStarted = true;
+    }
+
     update() {
-        if (isGameStarted()) {
+        if (this.gameStarted) {
             if (this.bossEncountered) {
                 if (this.cutsceneFrameIdx < BOSS_CUTSCENE_FRAME_LENGTH) {
                     this.cutsceneFrameIdx++;

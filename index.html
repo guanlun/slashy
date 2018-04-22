@@ -30,9 +30,8 @@
             justify-content: center;
         }
 
-        .hud-main {
-            width: 800px;
-            height: 300px;
+        .hud-menu {
+            width: 500px;
             padding: 20px;
             background: white;
             border-radius: 10px;
@@ -48,12 +47,16 @@
             margin-top: 20px;
         }
 
-        #start-game-button {
+        .menu-button {
             width: 200px;
             font-size: 30px;
             outline: none;
             border: 2px purple solid;
             margin: 0 auto;
+        }
+
+        #menu-dead {
+            display: none;
         }
     </style>
 </head>
@@ -61,14 +64,22 @@
     <div id="main">
         <canvas id="canvas"></canvas>
         <div id="hud-menus">
-            <div class="hud-main">
+            <div id="menu-main" class="hud-menu">
                 <div class="story">
                     One day a mysterious old man learned magic. After gaining the power of magic, he started to learn that the truth behind long life or eternity is to collect souls of all living people in the world. He learned it so late, that when he died in a hospital called 301, he did not have enough magic power to sustain his life form. Instead, he turned himself into a frog. The frog secretly absorbs people’s souls in that hospital by each second. Rumors began to spread that people who came to that hospital will have their life stolen. From the basement of that hospital, people heard horrible voice downside. Our protagonist, a young reporter who believes in Occultism, puts a sword in his arm and sneaked into that basement to look for the ghost in the 301 hospital.
                     <br /><br />
                     Our hero, will you be able to slay the ghost?
                 </div>
                 <div class="button-container">
-                    <button id="start-game-button">Start</button>
+                    <button id="start-game-button" class="menu-button">Start</button>
+                </div>
+            </div>
+            <div id="menu-dead" class="hud-menu">
+                <div class="story">
+
+                </div>
+                <div class="button-container">
+                    <button id="respawn-button" class="menu-button">Respawn</button>
                 </div>
             </div>
         </div>

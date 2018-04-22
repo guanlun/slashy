@@ -49,6 +49,7 @@ loadResources({
     characters: CHARACTERS,
     items: ITEMS,
     background: 'seamless-bg',
+    ground: 'rock',
 }).then(loadedResources => {
     const sceneManager = new SceneManager(loadedResources);
     sceneManager.start();

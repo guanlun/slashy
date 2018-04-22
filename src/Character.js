@@ -51,6 +51,8 @@ export default class Character {
         this.dead = false;
         this.yVel = 0;
 
+        this.invicibleFrameCount = this.behavior.isMainChar ? 100 : 0;
+
         this.collider = new Collider(this);
         this.hp = behavior.hp;
         this.sceneManager.registerCollider(this.collider);
@@ -160,6 +162,10 @@ export default class Character {
             this.actionFrameIdx++;
         }
 
+        if (this.invicibleFrameCount > 0) {
+            this.invicibleFrameCount--;
+        }
+
         if (this.actionFrameIdx === currActionSequence.length) {
             if (currActionAtomic) {
                 this.actionCompleted = true;
@@ -199,11 +205,16 @@ export default class Character {
     }
 
     takeDamage(damage) {
+        if (this.invicibleFrameCount > 0) {
+            return;
+        }
+
         this.changeAction(ACTIONS.HURT);
 
         this.hp -= damage;
 
         if (this.hp <= 0) {
+            this.hp = 0;
             this.changeAction(ACTIONS.DYING);
             this.behavior.die();
         }
@@ -224,6 +235,10 @@ export default class Character {
 
         const currActionSequence = this.actionSeqs[this.currAction];
 
+        if (this.invicibleFrameCount > 0) {
+            ctx.globalAlpha = 0.2;
+        }
+
         ctx.drawImage(
             currActionSequence[this.actionFrameIdx],
             0,
@@ -241,5 +256,14 @@ export default class Character {
 
     getCenterXPos() {
         return this.position.x + this.behavior.centerXOffset;
+    }
+
+    respawn() {
+        this.changeAction(ACTIONS.IDLE);
+        this.dying = false;
+        this.dead = false;
+        this.position.y = 500;
+        this.hp = this.behavior.hp;
+        this.invicibleFrameCount = 100;
     }
 }

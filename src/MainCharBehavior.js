@@ -8,7 +8,7 @@ export default class MainCharBehavior extends BaseBehavior {
 
         this.isMainChar = true;
         this.walkingSpeed = 8;
-        this.hp = 2000;
+        this.hp = 500;
     }
 
     update() {
@@ -35,5 +35,9 @@ export default class MainCharBehavior extends BaseBehavior {
         if (isJumping()) {
             this.character.startJumping();
         }
+    }
+
+    die() {
+        this.character.sceneManager.setMainCharDead(true);
     }
 }

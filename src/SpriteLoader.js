@@ -2,13 +2,14 @@ const SPRITE_DIR = '../images/sprites';
 const ITEM_DIR = '../images/item';
 const BG_DIR = '../images/bg';
 
-export function loadResources({ characters, items, background }) {
+export function loadResources({ characters, items, background, ground }) {
     const loadedResources = {};
 
     return Promise.all([
         loadAllCharacterSprites(characters),
         loadItemSprites(items),
-        loadBackground(background),
+        loadSingleImage('background', background),
+        loadSingleImage('ground', ground),
     ]).then(resources => {
         for (const res of resources) {
             loadedResources[res.type] = res.data;
@@ -77,9 +78,9 @@ function loadItemSprites(items) {
     });
 }
 
-function loadBackground(imgSrc) {
+function loadSingleImage(type, imgSrc) {
     return loadImage(`${BG_DIR}/${imgSrc}.png`)
-        .then(data => ({ type: 'background', data }));
+        .then(data => ({ type, data }));
 }
 
 function loadImage(src) {

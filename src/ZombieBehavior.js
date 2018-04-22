@@ -19,7 +19,7 @@ export default class ZombieBehavior extends BaseBehavior {
     }
 
     update() {
-        if (this.character.dead) {
+        if (this.character.dead || this.target.dead) {
             return;
         }
 
