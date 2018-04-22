@@ -22,7 +22,7 @@ export default class ThoughBubble {
         ctx.globalAlpha = alpha;
         ctx.drawImage(this.img, 0, 0, 300, 200);
 
-        ctx.font = '20px Comic Sans';
+        ctx.font = '20px Arial';
         ctx.fillStyle = 'black';
         ctx.fillText(this.text, 80, 100);
 

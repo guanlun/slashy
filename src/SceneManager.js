@@ -8,10 +8,12 @@ import FrogBehavior from './FrogBehavior';
 import MainCharBehavior from './MainCharBehavior';
 import Projectile from './Projectile';
 import Potion from './Potion';
+import RoadSign from './RoadSign';
 import ThoughtBubble from './ThoughtBubble';
 import { ACTIONS, THOUGHT_BUBBLES } from './Constants';
 import { isGameStarted, setPaused } from './GameStats';
 import { ITEM_TYPES, BOSS_CUTSCENE_FRAME_LENGTH, BOSS_CUTSCENE_X_POSITION, BOSS_CUTSCENE_X_POSITION, BOSS_X_POSITION } from './Constants';
+import Item from "./Item";
 
 const EPSILON = 0.001;
 
@@ -69,14 +71,18 @@ export default class SceneManager {
 
         for (let i = 0; i < 20; i++) {
             this.sceneContent.grounds.push(new Ground(
-                { x: Math.floor(Math.random() * 300) + 50, y: Math.floor(Math.random() * 2) + 1 },
+                { x: Math.floor(Math.random() * 500) + 50, y: Math.floor(Math.random() * 2) + 1 },
                 10 + Math.floor(Math.random() * 10),
                 this.loadedResources.ground,
             ));
         }
 
+        this.sceneContent.roadSigns = [
+            new RoadSign({ x: 900, y: 0 }, '301 Hospital', this.loadedResources.item.ROAD_SIGN),
+        ]
+
         for (let i = 0; i < 10; i++) {
-            this.spawnZombie(Math.floor(Math.random() * 3000) + 1500, Math.floor(Math.random() * 300));
+            this.spawnZombie(Math.floor(Math.random() * 5000) + 1500, Math.floor(Math.random() * 300));
         }
     }
 
@@ -90,7 +96,6 @@ export default class SceneManager {
     }
 
     spawnZombie(xPosition, yPosition) {
-        console.log(xPosition, yPosition)
         const resIdx = Math.ceil(Math.random() * 3);
 
         this.sceneContent.characters.push(

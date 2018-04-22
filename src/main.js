@@ -42,6 +42,7 @@ const ITEMS = {
     FIRE_SHOOT: 'Fire-Shoot',
     HEALTH_POTION: 'Health-Potion',
     THOUGHT_BUBBLE: 'thought-bubble',
+    ROAD_SIGN: 'Road-Sign',
 };
 
 let background = null;

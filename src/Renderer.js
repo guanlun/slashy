@@ -27,8 +27,12 @@ export default class Renderer {
 
         this.renderBackground(this.backgroundPattern, baseXPosition);
         this.renderGrounds(sceneContent.grounds);
-        this.renderCharacters(sceneContent.characters);
         this.renderItems(sceneContent.items);
+        for (const roadSign of sceneContent.roadSigns) {
+            roadSign.render(this.ctx);
+        }
+
+        this.renderCharacters(sceneContent.characters);
 
         this.ctx.restore();
 
