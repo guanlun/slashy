@@ -36,7 +36,6 @@ export default class ZombieBehavior extends BaseBehavior {
         } else if (xDiff >= -MAX_ATTACK_DISTANCE && xDiff <= MAX_ATTACK_DISTANCE) {
             const currTime = Date.now();
 
-            // console.log(currTime - this.lastAttackTime)
             if (currTime - this.lastAttackTime > ATTACK_COOLDOWN) {
                 this.character.changeAction(ACTIONS.ATTACK);
 

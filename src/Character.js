@@ -53,6 +53,8 @@ export default class Character {
 
         this.invicibleFrameCount = this.behavior.isMainChar ? 100 : 0;
 
+        this.thoughtBubble = null;
+
         this.collider = new Collider(this);
         this.hp = behavior.hp;
         this.sceneManager.registerCollider(this.collider);
@@ -122,12 +124,10 @@ export default class Character {
         }
 
         if (currActionAtomic && this.actionCompleted) {
-            // console.log(this.nextAction)
             this.setAction(this.nextAction || ACTIONS.IDLE);
         }
 
         if (!getPaused()) {
-            // TODO: move to behavior classes?
             switch (this.currAction) {
                 case ACTIONS.WALK:
                     this.position.x += this.flipped ? -this.behavior.walkingSpeed : this.behavior.walkingSpeed;
@@ -178,6 +178,16 @@ export default class Character {
                 this.actionFrameIdx = 0;
             }
         }
+
+        if (this.thoughtBubble) {
+            if (this.thoughtBubble.timeout > 0) {
+                this.thoughtBubble.timeout--;
+            }
+
+            if (this.thoughtBubble.timeout === 0) {
+                this.thoughtBubble = null;
+            }
+        }
     }
 
     findGround() {
@@ -205,6 +215,10 @@ export default class Character {
     }
 
     takeDamage(damage) {
+        if (this.dead) {
+            return;
+        }
+
         if (this.invicibleFrameCount > 0) {
             return;
         }
@@ -228,6 +242,10 @@ export default class Character {
         ctx.save();
 
         ctx.translate(this.position.x, -this.position.y + this.behavior.yRenderOffset);
+
+        if (this.thoughtBubble) {
+            this.thoughtBubble.render(ctx);
+        }
 
         if (this.flipped) {
             ctx.scale(-1, 1);
@@ -265,5 +283,9 @@ export default class Character {
         this.position.y = 500;
         this.hp = this.behavior.hp;
         this.invicibleFrameCount = 100;
+    }
+
+    addThoughtBubble(tb) {
+        this.thoughtBubble = tb;
     }
 }

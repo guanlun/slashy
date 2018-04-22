@@ -8,7 +8,8 @@ import FrogBehavior from './FrogBehavior';
 import MainCharBehavior from './MainCharBehavior';
 import Projectile from './Projectile';
 import Potion from './Potion';
-import { ACTIONS } from './Constants';
+import ThoughtBubble from './ThoughtBubble';
+import { ACTIONS, THOUGHT_BUBBLES } from './Constants';
 import { isGameStarted, setPaused } from './GameStats';
 import { ITEM_TYPES, BOSS_CUTSCENE_FRAME_LENGTH, BOSS_CUTSCENE_X_POSITION, BOSS_CUTSCENE_X_POSITION, BOSS_X_POSITION } from './Constants';
 
@@ -32,6 +33,8 @@ export default class SceneManager {
         this.bossEncountered = false;
         this.cutsceneFrameIdx = 0;
         this.mainCharDead = false;
+
+        this.thoughtBubbles = THOUGHT_BUBBLES.map(tb => Object.assign(tb, { displayed: false }));
     }
 
     createCharacters() {
@@ -58,16 +61,23 @@ export default class SceneManager {
 
         this.sceneContent.items = [];
 
+        this.sceneContent.grounds = [];
+
         this.sceneContent.baseGround = new Ground({ x: -10000, y: 0 }, 20000, this.loadedResources.ground);
 
-        this.sceneContent.grounds = [
-            this.sceneContent.baseGround,
-            new Ground({ x: 2, y: 1 }, 10, this.loadedResources.ground),
-        ];
+        this.sceneContent.grounds.push(this.sceneContent.baseGround);
 
-        this.spawnZombie(500);
-        this.spawnZombie(900);
-        this.spawnZombie(1300);
+        for (let i = 0; i < 20; i++) {
+            this.sceneContent.grounds.push(new Ground(
+                { x: Math.floor(Math.random() * 300) + 50, y: Math.floor(Math.random() * 2) + 1 },
+                10 + Math.floor(Math.random() * 10),
+                this.loadedResources.ground,
+            ));
+        }
+
+        for (let i = 0; i < 10; i++) {
+            this.spawnZombie(Math.floor(Math.random() * 3000) + 1500, Math.floor(Math.random() * 300));
+        }
     }
 
     getMainCharHpRatio() {
@@ -79,14 +89,15 @@ export default class SceneManager {
         this.sceneContent.mainChar.respawn();
     }
 
-    spawnZombie(xPosition) {
+    spawnZombie(xPosition, yPosition) {
+        console.log(xPosition, yPosition)
         const resIdx = Math.ceil(Math.random() * 3);
 
         this.sceneContent.characters.push(
             new Character({
                 name: `z${this.sceneContent.characters.length}`,
                 actionTemplate: this.loadedResources.characters[`zombie-${resIdx}`],
-                position: { x: xPosition, y: 0 },
+                position: { x: xPosition, y: yPosition },
                 behavior: new ZombieBehavior(this.sceneContent.mainChar),
                 sceneManager: this,
             }),
@@ -136,6 +147,14 @@ export default class SceneManager {
                     setPaused(true);
 
                     this.cutsceneFrameIdx = 0;
+                }
+            }
+
+            const mainChar = this.sceneContent.mainChar;
+            for (const tb of this.thoughtBubbles) {
+                if (mainChar.position.x >= tb.position && !tb.displayed) {
+                    tb.displayed = true;
+                    mainChar.addThoughtBubble(new ThoughtBubble(this.loadedResources.item.THOUGHT_BUBBLE, tb.text));
                 }
             }
 

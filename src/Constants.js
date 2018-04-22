@@ -29,5 +29,20 @@ export const ITEM_TYPES = {
 
 export const BOSS_CUTSCENE_FRAME_LENGTH = 20;
 
-export const BOSS_CUTSCENE_X_POSITION = 1000;
+export const BOSS_CUTSCENE_X_POSITION = 6000;
 export const BOSS_X_POSITION = BOSS_CUTSCENE_X_POSITION + 1200;
+
+export const THOUGHT_BUBBLES = [
+    {
+        position: 0,
+        text: 'Where am I?',
+    },
+    {
+        position: 500,
+        text: 'It\'s the haunted hospital',
+    },
+    {
+        position: BOSS_CUTSCENE_X_POSITION - 500,
+        text: 'I see it. The frog.',
+    },
+];

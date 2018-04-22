@@ -16,12 +16,14 @@ export default class Projectile extends Item {
         }
 
         for (const char of characters) {
-            const yDiff = this.position.y - char.position.y;
-            const xDiff = this.position.x - char.position.x;
+            if (char.isMainChar()) {
+                const yDiff = this.position.y - char.position.y;
+                const xDiff = this.position.x - char.position.x;
 
-            if (yDiff > -10 && yDiff < 10 && xDiff < 30 && xDiff > -30) {
-                char.heal(100);
-                this.defunct = true;
+                if (yDiff > -10 && yDiff < 10 && xDiff < 30 && xDiff > -30) {
+                    char.heal(100);
+                    this.defunct = true;
+                }
             }
         }
     }

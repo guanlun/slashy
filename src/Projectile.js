@@ -12,7 +12,7 @@ export default class Projectile extends Item {
         }
 
         for (const char of characters) {
-            if (char === this.parent) {
+            if (char === this.parent || char.dead) {
                 continue;
             }
 
