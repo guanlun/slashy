@@ -16,7 +16,7 @@ export default class Item {
 
         if (!this.isStill) {
             if (this.hasGravity) {
-                this.velocity.y += 0.8;
+                this.velocity.y -= 0.8;
             }
 
             const restingGround = this.sceneManager.getGroundForPosition(this.position);
@@ -24,7 +24,7 @@ export default class Item {
             this.position.x += this.velocity.x;
             this.position.y += this.velocity.y;
 
-            if (this.hasGravity && this.position.y > restingGround.position.y) {
+            if (this.hasGravity && this.position.y < restingGround.position.y) {
                 this.position.y = restingGround.position.y;
                 this.isStill = true;
             }
@@ -44,7 +44,7 @@ export default class Item {
 
         ctx.save();
 
-        ctx.translate(this.position.x, this.position.y);
+        ctx.translate(this.position.x, -this.position.y);
         if (this.velocity.x < 0) {
             ctx.scale(-1, 1);
         }

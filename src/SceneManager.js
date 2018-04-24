@@ -72,7 +72,7 @@ export default class SceneManager {
         for (let i = 0; i < 20; i++) {
             this.sceneContent.grounds.push(new Ground(
                 { x: Math.floor(Math.random() * 500) + 50, y: Math.floor(Math.random() * 2) + 1 },
-                10 + Math.floor(Math.random() * 10),
+                10 + Math.floor(Math.random() * 100),
                 this.loadedResources.ground,
             ));
         }
