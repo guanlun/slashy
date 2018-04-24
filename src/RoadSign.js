@@ -7,7 +7,7 @@ export default class RoadSign {
 
     render(ctx) {
         ctx.save();
-        ctx.translate(this.position.x, this.position.y + 262);
+        ctx.translate(this.position.x, this.position.y + 362);
         ctx.drawImage(this.image, 0, 0, 160, 160);
 
         ctx.fillStyle = 'black';

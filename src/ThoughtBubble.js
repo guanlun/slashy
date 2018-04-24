@@ -24,7 +24,7 @@ export default class ThoughBubble {
 
         ctx.font = '20px Arial';
         ctx.fillStyle = 'black';
-        ctx.fillText(this.text, 80, 100);
+        ctx.fillText(this.text, 60, 100);
 
         ctx.restore();
     }

@@ -39,10 +39,29 @@ export const THOUGHT_BUBBLES = [
     },
     {
         position: 500,
-        text: 'It\'s the haunted hospital',
+        text: 'The haunted hospital!',
+    },
+    {
+        position: 1000,
+        text: 'What is that thing!?',
     },
     {
         position: BOSS_CUTSCENE_X_POSITION - 500,
         text: 'I see it. The frog.',
     },
 ];
+
+export const ZOMBIE_SPEC = [
+    {
+        hp: 50,
+        speed: 3,
+    },
+    {
+        hp: 50,
+        speed: 6,
+    },
+    {
+        hp: 100,
+        speed: 2,
+    },
+]
