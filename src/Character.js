@@ -247,8 +247,15 @@ export default class Character {
             this.thoughtBubble.render(ctx);
         }
 
+
         if (this.flipped) {
             ctx.scale(-1, 1);
+        }
+
+        // We made our own "stab" animation, it was not perfect, so we need some visual tweaks here
+        if (this.currAction === ACTIONS.STAB) {
+            ctx.translate(32, -6);
+            ctx.scale(1.03, 1);
         }
 
         const currActionSequence = this.actionSeqs[this.currAction];

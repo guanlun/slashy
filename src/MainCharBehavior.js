@@ -19,6 +19,9 @@ export default class MainCharBehavior extends BaseBehavior {
             case COMMAND.ATTACK:
                 this.character.changeAction(ACTIONS.ATTACK);
                 break;
+            case COMMAND.STAB:
+                this.character.changeAction(ACTIONS.STAB);
+                break;
             case COMMAND.WALK_FORWARD:
                 this.character.flipped = false;
                 this.character.changeAction(ACTIONS.WALK);

@@ -11,6 +11,7 @@ export default class Collider {
             return;
         }
 
+        console.log(weaponCollider.character.position.x, this.character.position.x)
         const xDist = weaponCollider.character.position.x - this.character.position.x;
         const yDistAbs = Math.abs(weaponCollider.character.position.y - this.character.position.y);
         if (weaponCollider.character.flipped) {

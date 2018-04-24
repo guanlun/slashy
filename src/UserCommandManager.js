@@ -7,6 +7,7 @@ export const COMMAND = {
     WALK_FORWARD: 2,
     WALK_BACKWARD: 3,
     JUMP: 4,
+    STAB: 5,
 };
 
 export function setCommand(cmd) {

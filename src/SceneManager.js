@@ -103,7 +103,7 @@ export default class SceneManager {
                 name: `z${this.sceneContent.characters.length}`,
                 actionTemplate: this.loadedResources.characters[`zombie-${zombieIdx}`],
                 position: { x: xPosition, y: yPosition },
-                behavior: new ZombieBehavior(this.sceneContent.mainChar, ZOMBIE_SPEC[zombieIdx - 1]),
+                behavior: new ZombieBehavior(this.sceneContent.mainChar, ZOMBIE_SPEC[zombieIdx - 1], Math.random() < 0.15),
                 sceneManager: this,
             }),
         );

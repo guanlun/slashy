@@ -12,6 +12,16 @@ const BASIC_CHAR_ACTIONS = {
     jumping: { length: 6 },
 };
 
+const MAIN_CHAR_ACTIONS = {
+    attacking: { length: 12 },
+    walking: { length: 18 },
+    idle: { length: 12 },
+    dying: { length: 15 },
+    hurt: { length: 12 },
+    jumping: { length: 6 },
+    stab: { length: 18 },
+};
+
 const FROG_ACTIONS = {
     attacking: { length: 3 },
     idle: { length: 8 },
@@ -22,7 +32,7 @@ const FROG_ACTIONS = {
 
 const CHARACTERS = {
     'main': {
-        actionSpec: BASIC_CHAR_ACTIONS,
+        actionSpec: MAIN_CHAR_ACTIONS,
     },
     'zombie-1': {
         actionSpec: BASIC_CHAR_ACTIONS,
@@ -70,6 +80,9 @@ document.addEventListener('keydown', evt => {
             break;
         case 65:
             setCommand(COMMAND.ATTACK);
+            break;
+        case 83:
+            setCommand(COMMAND.STAB);
             break;
         case 32:
             evt.preventDefault();

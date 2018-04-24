@@ -7,7 +7,7 @@ const MAX_ATTACK_DISTANCE = 90;
 const ATTACK_COOLDOWN = 2000;
 
 export default class ZombieBehavior extends BaseBehavior {
-    constructor(target, spec) {
+    constructor(target, spec, hasPotion = false) {
         super();
         this.defaultFlipped = true;
         this.target = target;
@@ -16,6 +16,7 @@ export default class ZombieBehavior extends BaseBehavior {
 
         this.walkingSpeed = spec.speed;
         this.hp = spec.hp;
+        this.hasPotion = hasPotion;
     }
 
     update() {
@@ -54,16 +55,22 @@ export default class ZombieBehavior extends BaseBehavior {
     }
 
     die() {
-        const position = {
-            x: this.character.position.x,
-            y: this.character.position.y,
+        if (this.character.dead || this.character.dying) {
+            return;
         }
 
-        this.character.spawnItem({
-            type: ITEM_TYPES.HEALTH_POTION,
-            position,
-            velocity: { x: 6, y: 12 },
-        });
+        if (this.hasPotion) {
+            const position = {
+                x: this.character.position.x,
+                y: this.character.position.y,
+            }
+
+            this.character.spawnItem({
+                type: ITEM_TYPES.HEALTH_POTION,
+                position,
+                velocity: { x: 6, y: 12 },
+            });
+        }
     }
 
     isCoolingDown(currTime) {

@@ -5,6 +5,7 @@ export const ACTIONS = {
     HURT: 'hurt',
     DYING: 'dying',
     JUMP: 'jumping',
+    STAB: 'stab',
 };
 
 export const ATOMIC_ACTIONS = [
@@ -12,6 +13,7 @@ export const ATOMIC_ACTIONS = [
     ACTIONS.HURT,
     ACTIONS.DYING,
     ACTIONS.JUMP,
+    ACTIONS.STAB,
 ];
 
 export const CONTINUING_ACTIONS = [
@@ -29,7 +31,7 @@ export const ITEM_TYPES = {
 
 export const BOSS_CUTSCENE_FRAME_LENGTH = 20;
 
-export const BOSS_CUTSCENE_X_POSITION = 6000;
+export const BOSS_CUTSCENE_X_POSITION = 8000;
 export const BOSS_X_POSITION = BOSS_CUTSCENE_X_POSITION + 1200;
 
 export const THOUGHT_BUBBLES = [
