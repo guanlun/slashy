@@ -24,6 +24,8 @@ export default class FrogBehavior extends BaseBehavior {
         this.attackFrameCounter = 0;
         this.hitBoxWidth = 200;
         this.characterHeight = 130;
+
+        this.isBoss = true;
     }
 
     update() {

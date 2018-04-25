@@ -67,6 +67,10 @@ export default class Character {
         return this.behavior.isMainChar;
     }
 
+    isBoss() {
+        return this.behavior.isBoss;
+    }
+
     getCurrAction() {
         return this.currAction;
     }
@@ -259,6 +263,14 @@ export default class Character {
     }
 
     render(ctx) {
+        if (!this.isMainChar() && !this.isBoss()) {
+            if (this.frameIndexAfterDying > 400) {
+                return;
+            } else if (this.frameIndexAfterDying > 200) {
+                this.alpha = 1 - (this.frameIndexAfterDying - 200) / (400 - 200);
+            }
+        }
+
         ctx.save();
 
         ctx.globalAlpha = this.alpha;

@@ -81,7 +81,7 @@ export default class SceneManager {
                 new RoadSign({ x: 900, y: 0 }, '301 Hospital', this.loadedResources.item.ROAD_SIGN),
             ]
 
-            for (let i = 0; i < 10; i++) {
+            for (let i = 0; i < 1; i++) {
                 this.spawnZombie(Math.floor(Math.random() * 300) + 500 * i + 1600, Math.floor(Math.random() * 300));
             }
         }
