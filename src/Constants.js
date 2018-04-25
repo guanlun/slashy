@@ -56,8 +56,18 @@ export const THOUGHT_BUBBLES = [
         text: 'I see it. The frog.',
     },
     {
-        trigger: sceneManager => sceneManager.sceneContent.boss.dead,
+        trigger: sceneContent => sceneContent.boss.dead,
         text: 'The frog is dead.'
+    },
+    {
+        character: sceneContent => sceneContent.characters[2], // first zombie
+        position: 900,
+        text: 'GRRRRRR......'
+    },
+    {
+        character: sceneContent => sceneContent.characters[0], // boss
+        position: BOSS_CUTSCENE_X_POSITION,
+        text: 'I AM IMMORTAL!!!'
     }
 ];
 

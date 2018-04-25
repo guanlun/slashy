@@ -68,6 +68,8 @@ export default class SceneManager {
 
         this.sceneContent.grounds.push(this.sceneContent.baseGround);
 
+        this.sceneContent.roadSigns = [];
+
         if (!TESTING_BOSS) {
             for (let i = 0; i < 20; i++) {
                 this.sceneContent.grounds.push(new Ground(
@@ -77,11 +79,9 @@ export default class SceneManager {
                 ));
             }
 
-            this.sceneContent.roadSigns = [
-                new RoadSign({ x: 900, y: 0 }, '301 Hospital', this.loadedResources.item.ROAD_SIGN),
-            ]
+            this.sceneContent.roadSigns.push(new RoadSign({ x: 900, y: 0 }, '301 Hospital', this.loadedResources.item.ROAD_SIGN));
 
-            for (let i = 0; i < 1; i++) {
+            for (let i = 0; i < 10; i++) {
                 this.spawnZombie(Math.floor(Math.random() * 300) + 500 * i + 1600, Math.floor(Math.random() * 300));
             }
         }
@@ -163,14 +163,19 @@ export default class SceneManager {
                 }
 
                 if (tb.position !== undefined) {
+                    const targetCharacter = tb.character ? tb.character(this.sceneContent) : mainChar;
+                    if (!targetCharacter) {
+                        continue;
+                    }
+
                     if (mainChar.position.x >= tb.position) {
                         tb.displayed = true;
-                        mainChar.addThoughtBubble(new ThoughtBubble(this.loadedResources.item.THOUGHT_BUBBLE, tb.text));
+                        targetCharacter.addThoughtBubble(new ThoughtBubble(this.loadedResources.item.THOUGHT_BUBBLE, tb.text));
                     }
                 } else if (tb.trigger !== undefined) {
-                    if (tb.trigger(this)) {
+                    if (tb.trigger(this.sceneContent)) {
                         tb.displayed = true;
-                        mainChar.addThoughtBubble(new ThoughtBubble(this.loadedResources.item.THOUGHT_BUBBLE, tb.text));
+                        targetCharacter.addThoughtBubble(new ThoughtBubble(this.loadedResources.item.THOUGHT_BUBBLE, tb.text));
                     }
                 }
             }
