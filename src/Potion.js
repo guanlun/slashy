@@ -21,7 +21,7 @@ export default class Projectile extends Item {
                 const xDiff = this.position.x - char.position.x;
 
                 if (yDiff > -10 && yDiff < 10 && xDiff < 30 && xDiff > -30) {
-                    char.heal(100);
+                    char.heal(200);
                     this.defunct = true;
                 }
             }

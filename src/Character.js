@@ -239,6 +239,10 @@ export default class Character {
             return;
         }
 
+        if (this.currAction === ACTIONS.PARRY) {
+            return;
+        }
+
         this.changeAction(ACTIONS.HURT);
 
         this.hp -= damage;

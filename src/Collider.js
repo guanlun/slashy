@@ -17,7 +17,9 @@ export default class Collider {
         const hitPosition = weaponCollider.character.getAttackPosition();
 
         if (hitPosition.x >= hitBox.left &&
-            hitPosition.x <= hitBox.right) {
+            hitPosition.x <= hitBox.right &&
+            hitPosition.y >= hitBox.bottom &&
+            hitPosition.y <= hitBox.top) {
             this.character.takeDamage(attackType === 'stab' ? 75 : 50);
         }
 

@@ -6,7 +6,7 @@ export const ACTIONS = {
     DYING: 'dying',
     JUMP: 'jumping',
     STAB: 'stab',
-    PARRY: 'parry',
+    PARRY: 'taunt',
 };
 
 export const ATOMIC_ACTIONS = [
@@ -63,7 +63,7 @@ export const THOUGHT_BUBBLES = [
 
 export const ZOMBIE_SPEC = [
     {
-        hp: 50,
+        hp: 75,
         speed: 3,
     },
     {
@@ -71,7 +71,7 @@ export const ZOMBIE_SPEC = [
         speed: 6,
     },
     {
-        hp: 120,
+        hp: 150,
         speed: 2,
     },
 ]

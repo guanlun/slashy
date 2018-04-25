@@ -17,6 +17,7 @@ export default class ZombieBehavior extends BaseBehavior {
         this.walkingSpeed = spec.speed;
         this.hp = spec.hp;
         this.hasPotion = hasPotion;
+        this.itemDropped = false;
     }
 
     update() {
@@ -55,11 +56,11 @@ export default class ZombieBehavior extends BaseBehavior {
     }
 
     die() {
-        if (this.character.dead || this.character.dying) {
+        if (this.character.dead) {
             return;
         }
 
-        if (this.hasPotion) {
+        if (this.hasPotion && !this.itemDropped) {
             const position = {
                 x: this.character.position.x,
                 y: this.character.position.y,
@@ -70,6 +71,8 @@ export default class ZombieBehavior extends BaseBehavior {
                 position,
                 velocity: { x: 6, y: 12 },
             });
+
+            this.itemDropped = true;
         }
     }
 

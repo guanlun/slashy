@@ -82,6 +82,9 @@ document.addEventListener('keydown', evt => {
         case 65:
             setCommand(COMMAND.ATTACK);
             break;
+        case 66:
+            setCommand(COMMAND.PARRY);
+            break;
         case 83:
             setCommand(COMMAND.STAB);
             break;
