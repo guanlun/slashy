@@ -20,9 +20,17 @@ export function setJumping(j) {
 }
 
 export function getCurrentCommand() {
-    return currCommand;
+    const cmd = currCommand;
+
+    if (cmd === COMMAND.ATTACK || cmd === COMMAND.STAB || cmd === COMMAND.PARRY) {
+        currCommand = COMMAND.IDLE;
+    }
+
+    return cmd;
 }
 
 export function isJumping() {
-    return jumping;
+    const j = jumping;
+    jumping = false;
+    return j;
 }

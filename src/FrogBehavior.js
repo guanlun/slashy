@@ -16,7 +16,7 @@ export default class FrogBehavior extends BaseBehavior {
         this.lastAttackTime = 0;
 
         this.walkingSpeed = 5;
-        this.hp = 10;
+        this.hp = 301;
         this.animationFrameLength = 4;
         this.attackFrameInSequence = 1;
         this.riseWhenDead = true;

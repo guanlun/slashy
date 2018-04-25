@@ -129,6 +129,25 @@ wsConn.onmessage = msg => {
         case 'hack':
             setCommand(COMMAND.ATTACK);
             break;
+        case 'stab':
+            setCommand(COMMAND.STAB);
+            break;
+        case 'block':
+            setCommand(COMMAND.PARRY);
+            break;
+        case 'leftDown':
+            setCommand(COMMAND.WALK_BACKWARD);
+            break;
+        case 'rightDown':
+            setCommand(COMMAND.WALK_FORWARD);
+            break;
+        case 'leftUp':
+        case 'rightUp':
+            setCommand(COMMAND.IDLE);
+            break;
+        case 'jump':
+            setJumping(true);
+            break;
     }
 }
 
