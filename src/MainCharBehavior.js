@@ -3,13 +3,14 @@ import { COMMAND, getCurrentCommand, isJumping } from './UserCommandManager';
 import { ACTIONS } from './Constants';
 
 export default class MainCharBehavior extends BaseBehavior {
-    constructor() {
+    constructor(sounds = {}) {
         super();
 
         this.isMainChar = true;
         this.walkingSpeed = 8;
         this.hp = 500;
         this.stabFrameInSequence = 13;
+        this.sounds = sounds;
     }
 
     update() {

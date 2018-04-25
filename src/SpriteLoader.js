@@ -1,8 +1,9 @@
 const SPRITE_DIR = '../images/sprites';
 const ITEM_DIR = '../images/item';
 const BG_DIR = '../images/bg';
+const SOUND_DIR = '../sounds';
 
-export function loadResources({ characters, items, background, ground }) {
+export function loadResources({ characters, items, background, ground, sounds }) {
     const loadedResources = {};
 
     return Promise.all([
@@ -10,6 +11,7 @@ export function loadResources({ characters, items, background, ground }) {
         loadItemSprites(items),
         loadSingleImage('background', background),
         loadSingleImage('ground', ground),
+        loadSounds(sounds),
     ]).then(resources => {
         for (const res of resources) {
             loadedResources[res.type] = res.data;
@@ -17,6 +19,19 @@ export function loadResources({ characters, items, background, ground }) {
 
         return loadedResources;
     });
+}
+
+function loadSounds(sounds) {
+    const loadedSounds = {};
+
+    for (const soundKey of Object.keys(sounds)) {
+        loadedSounds[soundKey] = new Audio(`${SOUND_DIR}/${sounds[soundKey]}.mp3`);
+    }
+
+    return {
+        type: 'sounds',
+        data: loadedSounds,
+    };
 }
 
 function loadAllCharacterSprites(characters) {

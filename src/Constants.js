@@ -33,7 +33,7 @@ export const ITEM_TYPES = {
 
 export const TESTING_BOSS = false;
 
-export const BOSS_CUTSCENE_FRAME_LENGTH = 200;
+export const BOSS_CUTSCENE_FRAME_LENGTH = TESTING_BOSS ? 20 : 200;
 
 export const BOSS_CUTSCENE_X_POSITION = TESTING_BOSS ? 500 : 8000;
 export const BOSS_X_POSITION = BOSS_CUTSCENE_X_POSITION + 1200;
@@ -57,17 +57,19 @@ export const THOUGHT_BUBBLES = [
     },
     {
         trigger: sceneContent => sceneContent.boss.dead,
-        text: 'The frog is dead.'
+        text: 'The frog is dead.',
+        invokeAfter: sceneManager => sceneManager.showWinMenu(),
     },
     {
         character: sceneContent => sceneContent.characters[2], // first zombie
         position: 900,
-        text: 'GRRRRRR......'
+        text: 'GRRRRRR......',
     },
     {
         character: sceneContent => sceneContent.characters[0], // boss
         position: BOSS_CUTSCENE_X_POSITION,
-        text: 'I AM IMMORTAL!!!'
+        text: 'I AM IMMORTAL!!!',
+        withSound: true,
     }
 ];
 

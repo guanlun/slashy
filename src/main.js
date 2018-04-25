@@ -56,6 +56,17 @@ const ITEMS = {
     ROAD_SIGN: 'Road-Sign',
 };
 
+const SOUNDS = {
+    JUMP: 'yo',
+    ZOMBIE_HURT: 'ei',
+    ZOMBIE_DIE: 'zi',
+    THINK: 'ha',
+    START: 'start',
+    HERO_ATTACK: 'yoyo',
+    FROG_ATTACK: 'ha',
+    FROG_THINK: 'howa',
+};
+
 let background = null;
 
 loadResources({
@@ -63,6 +74,7 @@ loadResources({
     items: ITEMS,
     background: 'bg',
     ground: 'rock',
+    sounds: SOUNDS,
 }).then(loadedResources => {
     const sceneManager = new SceneManager(loadedResources);
     sceneManager.start();
@@ -103,22 +115,23 @@ document.addEventListener('keyup', evt => {
     }
 });
 
-// const wsAddr = `ws://${Config.WS_SERVER_IP}:${Config.WS_SERVER_PORT}`;
+const wsAddr = `ws://${Config.WS_SERVER_IP}:${Config.WS_SERVER_PORT}`;
 
-// const wsConn = new WebSocket(wsAddr);
-// wsConn.onopen = _ => {
-//     console.log('connected to ws server');
-// }
+const wsConn = new WebSocket(wsAddr);
+wsConn.onopen = _ => {
+    console.log('connected to ws server');
+}
 
-// const indicator = document.querySelector('#main')
+const indicator = document.querySelector('#main')
 
-// wsConn.onmessage = msg => {
-//     console.log(msg)
-//     if (msg.data === 'hack') {
-//         mainChar.attack();
-//     }
-// }
+wsConn.onmessage = msg => {
+    switch (msg.data) {
+        case 'hack':
+            setCommand(COMMAND.ATTACK);
+            break;
+    }
+}
 
-// wsConn.onerror = () => {
-//     console.log('error')
-// }
+wsConn.onerror = () => {
+    console.log('error')
+}

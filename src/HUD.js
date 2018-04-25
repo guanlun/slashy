@@ -21,6 +21,8 @@ export default class HUD {
             this.showMenu(false, this.deadMenu);
             this.sceneManager.respawn();
         }
+
+        this.winMenu = document.getElementById('menu-win');
     }
 
     showMenu(shouldShow, menu) {
@@ -30,6 +32,10 @@ export default class HUD {
 
     showDeadMenu() {
         this.showMenu(true, this.deadMenu);
+    }
+
+    showWinMenu() {
+        this.showMenu(true, this.winMenu);
     }
 
     render(ctx) {

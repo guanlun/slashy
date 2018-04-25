@@ -2,10 +2,13 @@ const TIMEOUT = 300;
 const FADE_DURATION = 30;
 
 export default class ThoughBubble {
-    constructor(img, text) {
+    constructor(sceneManager, img, text, invokeAfter) {
+        this.sceneManager = sceneManager;
         this.img = img;
         this.text = text;
         this.timeout = TIMEOUT;
+        this.invoked = false;
+        this.invokeAfter = invokeAfter;
     }
 
     render(ctx) {

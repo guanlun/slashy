@@ -7,7 +7,7 @@ const MAX_ATTACK_DISTANCE = 90;
 const ATTACK_COOLDOWN = 2000;
 
 export default class ZombieBehavior extends BaseBehavior {
-    constructor(target, spec, hasPotion = false) {
+    constructor(target, spec, hasPotion = false, sounds = {}) {
         super();
         this.defaultFlipped = true;
         this.target = target;
@@ -18,6 +18,8 @@ export default class ZombieBehavior extends BaseBehavior {
         this.hp = spec.hp;
         this.hasPotion = hasPotion;
         this.itemDropped = false;
+
+        this.sounds = sounds;
     }
 
     update() {

@@ -10,9 +10,11 @@
             margin: 0;
             padding: 0;
             font-family: Helvetica;
+            background: black;
         }
 
         #main {
+            margin-top: 120px;
             width: 100px;
             height: 100px;
             border-radius: 50%;
@@ -58,6 +60,10 @@
         #menu-dead {
             display: none;
         }
+
+        #menu-win {
+            display: none;
+        }
     </style>
 </head>
 <body>
@@ -80,6 +86,11 @@
                 </div>
                 <div class="button-container">
                     <button id="respawn-button" class="menu-button">Respawn</button>
+                </div>
+            </div>
+            <div id="menu-win" class="hud-menu">
+                <div class="story">
+                    The frog has been slain.
                 </div>
             </div>
         </div>

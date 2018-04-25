@@ -1,5 +1,6 @@
 import BaseBehavior from './BaseBehavior';
 import { ACTIONS, ITEM_TYPES } from './Constants';
+import { getPaused } from './GameStats';
 
 const MAX_DETECT_DISTANCE = 1000;
 const MAX_ATTACK_DISTANCE = 1000;
@@ -7,7 +8,7 @@ const MAX_ATTACK_DISTANCE = 1000;
 const ATTACK_COOLDOWN = 2000;
 
 export default class FrogBehavior extends BaseBehavior {
-    constructor(target) {
+    constructor(target, sounds) {
         super();
         this.defaultFlipped = true;
         this.target = target;
@@ -26,10 +27,12 @@ export default class FrogBehavior extends BaseBehavior {
         this.characterHeight = 130;
 
         this.isBoss = true;
+
+        this.sounds = sounds;
     }
 
     update() {
-        if (this.character.dead || !this.target.sceneManager.bossEncountered) {
+        if (this.character.dead || !this.target.sceneManager.bossEncountered || getPaused()) {
             return;
         }
 
@@ -45,22 +48,6 @@ export default class FrogBehavior extends BaseBehavior {
         } else {
             this.attackFrameCounter--;
         }
-
-        // if (xDiff < MAX_DETECT_DISTANCE && xDiff > MAX_ATTACK_DISTANCE) {
-        //     this.character.changeAction(ACTIONS.WALK);
-        // } else if (xDiff > -MAX_DETECT_DISTANCE && xDiff < -MAX_ATTACK_DISTANCE) {
-        //     this.character.changeAction(ACTIONS.WALK);
-        // } else if (xDiff >= -MAX_ATTACK_DISTANCE && xDiff <= MAX_ATTACK_DISTANCE) {
-        //     const currTime = Date.now();
-
-        //     if (currTime - this.lastAttackTime > ATTACK_COOLDOWN) {
-        //         this.character.changeAction(ACTIONS.ATTACK);
-
-        //         this.lastAttackTime = currTime;
-        //     } else {
-        //         this.character.changeAction(ACTIONS.IDLE);
-        //     }
-        // }
     }
 
     onReachedBoundary() {

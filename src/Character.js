@@ -103,6 +103,12 @@ export default class Character {
         this.currAction = action;
         this.actionFrameIdx = 0;
         this.actionCompleted = false;
+
+        if (action === ACTIONS.ATTACK || action === ACTIONS.STAB) {
+            if (this.behavior.sounds.attack) {
+                this.behavior.sounds.attack.play();
+            }
+        }
     }
 
     update() {
@@ -205,6 +211,11 @@ export default class Character {
             }
 
             if (this.thoughtBubble.timeout === 0) {
+                if (this.thoughtBubble.timeout === 0 && this.thoughtBubble.invokeAfter && !this.thoughtBubble.invoked) {
+                    this.thoughtBubble.invokeAfter(this.sceneManager);
+                    this.thoughtBubble.invoked = true;
+                }
+
                 this.thoughtBubble = null;
             }
         }
@@ -220,6 +231,10 @@ export default class Character {
     startJumping() {
         if (this.jumping) {
             return;
+        }
+
+        if (this.behavior.sounds.jump) {
+            this.behavior.sounds.jump.play();
         }
 
         this.jumping = true;
@@ -255,6 +270,14 @@ export default class Character {
             this.hp = 0;
             this.changeAction(ACTIONS.DYING);
             this.behavior.die();
+
+            if (this.behavior.sounds.die) {
+                this.behavior.sounds.die.play();
+            }
+        } else {
+            if (this.behavior.sounds.hurt) {
+                this.behavior.sounds.hurt.play();
+            }
         }
 
         if (this.mainCharManager) {
@@ -354,5 +377,9 @@ export default class Character {
 
     addThoughtBubble(tb) {
         this.thoughtBubble = tb;
+
+        if (this.behavior.sounds.think) {
+            this.behavior.sounds.think.play();
+        }
     }
 }

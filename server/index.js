@@ -1,5 +1,6 @@
 const WebSocket = require('ws');
-const http = require('http');
+const express = require('express');
+const bodyParser = require("body-parser");
 
 const ws = new WebSocket.Server({ port: 9001 });
 
@@ -19,13 +20,25 @@ ws.on('connection', socket => {
     });
 });
 
+const app = express();
+app.use(bodyParser.urlencoded({ extended: false }));
 
-http.createServer((req, res) => {
-    console.log('req coming');
-    res.write('ok');
-    res.end();
+app.get('/', (req, res) => {
+    res.send('ok');
 
     if (webSocket) {
-        webSocket.send('hack');
+        webSocket.send(req.param('action'));
     }
-}).listen(9000);
+});
+
+app.listen(9000);
+
+// http.createServer((req, res) => {
+//     console.log('req coming', req.body);
+//     res.write('ok');
+//     res.end();
+
+//     if (webSocket) {
+//         webSocket.send('hack');
+//     }
+// }).listen(9000);

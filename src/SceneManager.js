@@ -43,7 +43,10 @@ export default class SceneManager {
         const mainChar = new Character({
             name: 'main',
             actionTemplate: this.loadedResources.characters['main'],
-            behavior: new MainCharBehavior(),
+            behavior: new MainCharBehavior({
+                jump: this.loadedResources.sounds.JUMP,
+                attack: this.loadedResources.sounds.HERO_ATTACK,
+            }),
             sceneManager: this,
             mainCharManager: new MainCharManager(),
         });
@@ -53,7 +56,10 @@ export default class SceneManager {
             name: 'frog',
             actionTemplate: this.loadedResources.characters['frog'],
             position: { x: BOSS_X_POSITION, y: 0 },
-            behavior: new FrogBehavior(mainChar),
+            behavior: new FrogBehavior(mainChar, {
+                attack: this.loadedResources.sounds.FROG_ATTACK,
+                think: this.loadedResources.sounds.FROG_THINK,
+            }),
             sceneManager: this,
         });
         this.sceneContent.boss = boss;
@@ -104,7 +110,15 @@ export default class SceneManager {
                 name: `z${this.sceneContent.characters.length}`,
                 actionTemplate: this.loadedResources.characters[`zombie-${zombieIdx}`],
                 position: { x: xPosition, y: yPosition },
-                behavior: new ZombieBehavior(this.sceneContent.mainChar, ZOMBIE_SPEC[zombieIdx - 1], Math.random() < 0.5),
+                behavior: new ZombieBehavior(
+                    this.sceneContent.mainChar,
+                    ZOMBIE_SPEC[zombieIdx - 1],
+                    Math.random() < 0.5,
+                    {
+                        hurt: this.loadedResources.sounds.ZOMBIE_HURT,
+                        die: this.loadedResources.sounds.ZOMBIE_DIE,
+                    },
+                ),
                 sceneManager: this,
             }),
         );
@@ -134,8 +148,16 @@ export default class SceneManager {
         }
     }
 
+    showWinMenu() {
+        this.sceneContent.hud.showWinMenu();
+    }
+
     startGame() {
         this.gameStarted = true;
+
+        if (this.loadedResources.sounds.START) {
+            this.loadedResources.sounds.START.play();
+        }
     }
 
     update() {
@@ -170,12 +192,12 @@ export default class SceneManager {
                 if (tb.position !== undefined) {
                     if (mainChar.position.x >= tb.position) {
                         tb.displayed = true;
-                        targetCharacter.addThoughtBubble(new ThoughtBubble(this.loadedResources.item.THOUGHT_BUBBLE, tb.text));
+                        targetCharacter.addThoughtBubble(new ThoughtBubble(this, this.loadedResources.item.THOUGHT_BUBBLE, tb.text, tb.invokeAfter));
                     }
                 } else if (tb.trigger !== undefined) {
                     if (tb.trigger(this.sceneContent)) {
                         tb.displayed = true;
-                        targetCharacter.addThoughtBubble(new ThoughtBubble(this.loadedResources.item.THOUGHT_BUBBLE, tb.text));
+                        targetCharacter.addThoughtBubble(new ThoughtBubble(this, this.loadedResources.item.THOUGHT_BUBBLE, tb.text, tb.invokeAfter));
                     }
                 }
             }
