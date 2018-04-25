@@ -73,7 +73,7 @@ export default class SceneManager {
         if (!TESTING_BOSS) {
             for (let i = 0; i < 20; i++) {
                 this.sceneContent.grounds.push(new Ground(
-                    { x: Math.floor(Math.random() * 500) + 50, y: Math.floor(Math.random() * 2) + 1 },
+                    { x: Math.floor(Math.random() * 300) + 50, y: Math.floor(Math.random() * 2) + 1 },
                     10 + Math.floor(Math.random() * 10),
                     this.loadedResources.ground,
                 ));
@@ -162,12 +162,12 @@ export default class SceneManager {
                     continue;
                 }
 
-                if (tb.position !== undefined) {
-                    const targetCharacter = tb.character ? tb.character(this.sceneContent) : mainChar;
-                    if (!targetCharacter) {
-                        continue;
-                    }
+                const targetCharacter = tb.character ? tb.character(this.sceneContent) : mainChar;
+                if (!targetCharacter) {
+                    continue;
+                }
 
+                if (tb.position !== undefined) {
                     if (mainChar.position.x >= tb.position) {
                         tb.displayed = true;
                         targetCharacter.addThoughtBubble(new ThoughtBubble(this.loadedResources.item.THOUGHT_BUBBLE, tb.text));

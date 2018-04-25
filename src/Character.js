@@ -89,7 +89,7 @@ export default class Character {
         }
 
         if (isAtomic(this.currAction)) {
-            if (this.currAction === ACTIONS.HURT && action === ACTIONS.DYING) {
+            if (action === ACTIONS.HURT || action === ACTIONS.DYING) {
                 this.setAction(action);
             } else {
                 this.nextAction = action;
