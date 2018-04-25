@@ -12,7 +12,7 @@ import RoadSign from './RoadSign';
 import ThoughtBubble from './ThoughtBubble';
 import { ACTIONS, THOUGHT_BUBBLES, ZOMBIE_SPEC } from './Constants';
 import { isGameStarted, setPaused } from './GameStats';
-import { ITEM_TYPES, BOSS_CUTSCENE_FRAME_LENGTH, BOSS_CUTSCENE_X_POSITION, BOSS_CUTSCENE_X_POSITION, BOSS_X_POSITION } from './Constants';
+import { TESTING_BOSS, ITEM_TYPES, BOSS_CUTSCENE_FRAME_LENGTH, BOSS_CUTSCENE_X_POSITION, BOSS_CUTSCENE_X_POSITION, BOSS_X_POSITION } from './Constants';
 import Item from "./Item";
 
 const EPSILON = 0.001;
@@ -47,19 +47,18 @@ export default class SceneManager {
             sceneManager: this,
             mainCharManager: new MainCharManager(),
         });
-
         this.sceneContent.mainChar = mainChar;
 
-        this.sceneContent.characters = [
-            mainChar,
-            new Character({
-                name: 'frog',
-                actionTemplate: this.loadedResources.characters['frog'],
-                position: { x: BOSS_X_POSITION, y: 0 },
-                behavior: new FrogBehavior(mainChar),
-                sceneManager: this,
-            }),
-        ];
+        const boss = new Character({
+            name: 'frog',
+            actionTemplate: this.loadedResources.characters['frog'],
+            position: { x: BOSS_X_POSITION, y: 0 },
+            behavior: new FrogBehavior(mainChar),
+            sceneManager: this,
+        });
+        this.sceneContent.boss = boss;
+
+        this.sceneContent.characters = [ boss, mainChar ];
 
         this.sceneContent.items = [];
 
@@ -69,20 +68,22 @@ export default class SceneManager {
 
         this.sceneContent.grounds.push(this.sceneContent.baseGround);
 
-        for (let i = 0; i < 20; i++) {
-            this.sceneContent.grounds.push(new Ground(
-                { x: Math.floor(Math.random() * 500) + 50, y: Math.floor(Math.random() * 2) + 1 },
-                10 + Math.floor(Math.random() * 10),
-                this.loadedResources.ground,
-            ));
-        }
+        if (!TESTING_BOSS) {
+            for (let i = 0; i < 20; i++) {
+                this.sceneContent.grounds.push(new Ground(
+                    { x: Math.floor(Math.random() * 500) + 50, y: Math.floor(Math.random() * 2) + 1 },
+                    10 + Math.floor(Math.random() * 10),
+                    this.loadedResources.ground,
+                ));
+            }
 
-        this.sceneContent.roadSigns = [
-            new RoadSign({ x: 900, y: 0 }, '301 Hospital', this.loadedResources.item.ROAD_SIGN),
-        ]
+            this.sceneContent.roadSigns = [
+                new RoadSign({ x: 900, y: 0 }, '301 Hospital', this.loadedResources.item.ROAD_SIGN),
+            ]
 
-        for (let i = 0; i < 10; i++) {
-            this.spawnZombie(Math.floor(Math.random() * 300) + 500 * i + 1600, Math.floor(Math.random() * 300));
+            for (let i = 0; i < 10; i++) {
+                this.spawnZombie(Math.floor(Math.random() * 300) + 500 * i + 1600, Math.floor(Math.random() * 300));
+            }
         }
     }
 
@@ -157,9 +158,20 @@ export default class SceneManager {
 
             const mainChar = this.sceneContent.mainChar;
             for (const tb of this.thoughtBubbles) {
-                if (mainChar.position.x >= tb.position && !tb.displayed) {
-                    tb.displayed = true;
-                    mainChar.addThoughtBubble(new ThoughtBubble(this.loadedResources.item.THOUGHT_BUBBLE, tb.text));
+                if (tb.displayed) {
+                    continue;
+                }
+
+                if (tb.position !== undefined) {
+                    if (mainChar.position.x >= tb.position) {
+                        tb.displayed = true;
+                        mainChar.addThoughtBubble(new ThoughtBubble(this.loadedResources.item.THOUGHT_BUBBLE, tb.text));
+                    }
+                } else if (tb.trigger !== undefined) {
+                    if (tb.trigger(this)) {
+                        tb.displayed = true;
+                        mainChar.addThoughtBubble(new ThoughtBubble(this.loadedResources.item.THOUGHT_BUBBLE, tb.text));
+                    }
                 }
             }
 
@@ -185,9 +197,9 @@ export default class SceneManager {
         this.colliders.push(collider);
     }
 
-    checkAttackCollision(weaponCollider) {
+    checkAttackCollision(weaponCollider, attackType) {
         for (const collider of this.colliders) {
-            collider.checkWeaponAttackCollision(weaponCollider);
+            collider.checkWeaponAttackCollision(weaponCollider, attackType);
         }
     }
 

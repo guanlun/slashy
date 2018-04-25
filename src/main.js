@@ -19,7 +19,8 @@ const MAIN_CHAR_ACTIONS = {
     dying: { length: 15 },
     hurt: { length: 12 },
     jumping: { length: 6 },
-    stab: { length: 18 },
+    stab: { length: 20 },
+    taunt: { length: 12 },
 };
 
 const FROG_ACTIONS = {

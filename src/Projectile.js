@@ -16,10 +16,14 @@ export default class Projectile extends Item {
                 continue;
             }
 
-            const yDiff = this.position.y - char.position.y;
-            const xDiff = this.position.x - char.position.x;
+            const hitBox = char.getHitBox();
 
-            if (yDiff > 0 && yDiff < 100 && xDiff < 150 && xDiff > 0) {
+            const relativeProjectiveYPos = this.position.y + 50;
+
+            if (this.position.x >= hitBox.left &&
+                this.position.x <= hitBox.right &&
+                relativeProjectiveYPos >= hitBox.bottom &&
+                relativeProjectiveYPos <= hitBox.top) {
                 char.takeDamage(100);
                 this.defunct = true;
             }

@@ -24,7 +24,6 @@ export default class Renderer {
             (1 - cutsceneTransitionFraction) * (sceneContent.mainChar.position.x - this.canvas.width / 2 + 160)
             + cutsceneTransitionFraction * BOSS_CUTSCENE_X_POSITION;
         this.ctx.translate(-baseXPosition, 0);
-
         this.renderBackground(this.backgroundPattern, baseXPosition);
         this.renderGrounds(sceneContent.grounds);
         this.renderItems(sceneContent.items);
@@ -55,6 +54,12 @@ export default class Renderer {
 
         for (const char of characters) {
             char.render(this.ctx);
+
+            // Render hit box
+            // this.ctx.globalAlpha = 0.5;
+            // this.ctx.fillStyle = 'red';
+            // const hb = char.getHitBox();
+            // this.ctx.fillRect(hb.left, 110 - hb.top, hb.right - hb.left, hb.top - hb.bottom);
         }
 
         this.ctx.restore();

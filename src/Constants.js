@@ -6,6 +6,7 @@ export const ACTIONS = {
     DYING: 'dying',
     JUMP: 'jumping',
     STAB: 'stab',
+    PARRY: 'parry',
 };
 
 export const ATOMIC_ACTIONS = [
@@ -14,6 +15,7 @@ export const ATOMIC_ACTIONS = [
     ACTIONS.DYING,
     ACTIONS.JUMP,
     ACTIONS.STAB,
+    ACTIONS.PARRY,
 ];
 
 export const CONTINUING_ACTIONS = [
@@ -29,9 +31,11 @@ export const ITEM_TYPES = {
     HEALTH_POTION: 'health-potion',
 };
 
-export const BOSS_CUTSCENE_FRAME_LENGTH = 20;
+export const TESTING_BOSS = false;
 
-export const BOSS_CUTSCENE_X_POSITION = 8000;
+export const BOSS_CUTSCENE_FRAME_LENGTH = 200;
+
+export const BOSS_CUTSCENE_X_POSITION = TESTING_BOSS ? 500 : 8000;
 export const BOSS_X_POSITION = BOSS_CUTSCENE_X_POSITION + 1200;
 
 export const THOUGHT_BUBBLES = [
@@ -51,6 +55,10 @@ export const THOUGHT_BUBBLES = [
         position: BOSS_CUTSCENE_X_POSITION - 500,
         text: 'I see it. The frog.',
     },
+    {
+        trigger: sceneManager => sceneManager.sceneContent.boss.dead,
+        text: 'The frog is dead.'
+    }
 ];
 
 export const ZOMBIE_SPEC = [
@@ -63,7 +71,7 @@ export const ZOMBIE_SPEC = [
         speed: 6,
     },
     {
-        hp: 100,
+        hp: 120,
         speed: 2,
     },
 ]

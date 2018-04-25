@@ -15,13 +15,15 @@ export default class FrogBehavior extends BaseBehavior {
         this.lastAttackTime = 0;
 
         this.walkingSpeed = 5;
-        this.hp = 1000;
+        this.hp = 10;
         this.animationFrameLength = 4;
         this.attackFrameInSequence = 1;
         this.riseWhenDead = true;
         this.yRenderOffset = -30;
 
         this.attackFrameCounter = 0;
+        this.hitBoxWidth = 200;
+        this.characterHeight = 130;
     }
 
     update() {
@@ -65,8 +67,8 @@ export default class FrogBehavior extends BaseBehavior {
 
     performAttack(sceneManager) {
         const position = {
-            x: this.character.position.x,
-            y: this.character.position.y + 30,
+            x: this.character.flipped ? this.character.position.x : this.character.position.x + 150,
+            y: this.character.position.y,
         }
 
         this.character.spawnItem({

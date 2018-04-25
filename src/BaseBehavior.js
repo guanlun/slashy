@@ -6,6 +6,8 @@ export default class BaseBehavior {
         this.attackFrameInSequence = 10;
         this.riseWhenDead = false;
         this.yRenderOffset = 0;
+        this.hitBoxWidth = 100;
+        this.characterHeight = 110;
     }
 
     setCharacter(char) {
@@ -16,8 +18,8 @@ export default class BaseBehavior {
 
     }
 
-    performAttack(sceneManager) {
-        sceneManager.checkAttackCollision(this.character.collider);
+    performAttack(sceneManager, attackType = 'normal') {
+        sceneManager.checkAttackCollision(this.character.collider, attackType);
     }
 
     onReachedBoundary() {

@@ -9,6 +9,7 @@ export default class MainCharBehavior extends BaseBehavior {
         this.isMainChar = true;
         this.walkingSpeed = 8;
         this.hp = 500;
+        this.stabFrameInSequence = 13;
     }
 
     update() {

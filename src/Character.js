@@ -2,6 +2,7 @@ import Collider from './Collider';
 import { setHeroHP, setHeroMaxHP, getPaused } from './GameStats';
 import { loadCharacterSprites } from './SpriteLoader';
 import { ACTIONS, ATOMIC_ACTIONS, TERMINAL_ACTIONS, CONTINUING_ACTIONS, BOSS_CUTSCENE_X_POSITION, BOSS_X_POSITION } from './Constants';
+import { ENGINE_METHOD_CIPHERS } from 'constants';
 
 function isAtomic(action) {
     return ATOMIC_ACTIONS.indexOf(action) !== -1;
@@ -49,6 +50,8 @@ export default class Character {
 
         this.dying = false;
         this.dead = false;
+        this.frameIndexAfterDying = 0;
+        this.alpha = 1;
         this.yVel = 0;
 
         this.invicibleFrameCount = this.behavior.isMainChar ? 100 : 0;
@@ -100,6 +103,7 @@ export default class Character {
 
     update() {
         if (this.dead) {
+            this.frameIndexAfterDying++;
             return;
         }
 
@@ -109,18 +113,30 @@ export default class Character {
 
         const currActionAtomic = isAtomic(this.currAction);
 
-        const standingGround = this.findGround();
-        this.yVel -= 0.1;
-        this.position.y += this.yVel * 12;
+        if (this.dying) {
+            this.frameIndexAfterDying++;
 
-        if (this.position.y < standingGround.position.y) {
-            // character became lower than the standing ground => landed
-            this.yVel = 0;
-            this.position.y = standingGround.position.y;
-
-            this.jumping = false;
+            if (this.behavior.riseWhenDead) {
+                this.position.y += 3;
+                this.alpha -= 0.01;
+                if (this.alpha < 0) {
+                    this.alpha = 0;
+                }
+            }
         } else {
-            this.jumping = true;
+            const standingGround = this.findGround();
+            this.yVel -= 0.1;
+            this.position.y += this.yVel * 12;
+
+            if (this.position.y < standingGround.position.y) {
+                // character became lower than the standing ground => landed
+                this.yVel = 0;
+                this.position.y = standingGround.position.y;
+
+                this.jumping = false;
+            } else {
+                this.jumping = true;
+            }
         }
 
         if (currActionAtomic && this.actionCompleted) {
@@ -144,12 +160,12 @@ export default class Character {
                     break;
                 case ACTIONS.ATTACK:
                     if (this.frameSkipCount === 0 && this.actionFrameIdx === this.behavior.attackFrameInSequence) {
-                        this.behavior.performAttack(this.sceneManager);
+                        this.behavior.performAttack(this.sceneManager, 'normal');
                     }
                     break;
-                case ACTIONS.DEAD:
-                    if (this.behavior.riseWhenDead) {
-
+                case ACTIONS.STAB:
+                    if (this.frameSkipCount === 0 && this.actionFrameIdx === this.behavior.stabFrameInSequence) {
+                        this.behavior.performAttack(this.sceneManager, 'stab');
                     }
                     break;
             }
@@ -241,12 +257,13 @@ export default class Character {
     render(ctx) {
         ctx.save();
 
+        ctx.globalAlpha = this.alpha;
+
         ctx.translate(this.position.x, -this.position.y + this.behavior.yRenderOffset);
 
         if (this.thoughtBubble) {
             this.thoughtBubble.render(ctx);
         }
-
 
         if (this.flipped) {
             ctx.scale(-1, 1);
@@ -281,6 +298,33 @@ export default class Character {
 
     getCenterXPos() {
         return this.position.x + this.behavior.centerXOffset;
+    }
+
+    getHitBox() {
+        const baseOffset = 100;
+        const halfHitBoxWidth = this.behavior.hitBoxWidth / 2;
+
+        return {
+            left: this.position.x + baseOffset - halfHitBoxWidth,
+            right: this.position.x + baseOffset + halfHitBoxWidth,
+            top: this.position.y + this.behavior.characterHeight,
+            bottom: this.position.y,
+        };
+    }
+
+    getAttackPosition() {
+        const baseOffset = 100;
+        let attackDistance = 0;
+        if (this.currAction === ACTIONS.STAB) {
+            attackDistance = 100;
+        } else if (this.currAction === ACTIONS.ATTACK) {
+            attackDistance = 60;
+        }
+
+        return {
+            x: this.position.x + baseOffset + (this.flipped ? -attackDistance : attackDistance),
+            y: this.position.y + 30,
+        };
     }
 
     respawn() {

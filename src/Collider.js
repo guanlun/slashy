@@ -6,22 +6,32 @@ export default class Collider {
         this.character = char;
     }
 
-    checkWeaponAttackCollision(weaponCollider) {
+    checkWeaponAttackCollision(weaponCollider, attackType) {
         if (weaponCollider.character.isMainChar() === this.character.isMainChar()) {
             return;
         }
 
-        console.log(weaponCollider.character.position.x, this.character.position.x)
-        const xDist = weaponCollider.character.position.x - this.character.position.x;
-        const yDistAbs = Math.abs(weaponCollider.character.position.y - this.character.position.y);
-        if (weaponCollider.character.flipped) {
-            if (xDist > 0 && xDist < DAMAGE_DISTANCE && yDistAbs < 60) {
-                this.character.takeDamage(50);
-            }
-        } else {
-            if (xDist < 0 && xDist > -DAMAGE_DISTANCE && yDistAbs < 60) {
-                this.character.takeDamage(50);
-            }
+        const attackDistance = (attackType === 'stab') ? 80 : 40;
+
+        const hitBox = this.character.getHitBox();
+        const hitPosition = weaponCollider.character.getAttackPosition();
+
+        if (hitPosition.x >= hitBox.left &&
+            hitPosition.x <= hitBox.right) {
+            this.character.takeDamage(attackType === 'stab' ? 75 : 50);
         }
+
+        // console.log(weaponCollider.character.position.x, this.character.position.x)
+        // const xDist = weaponCollider.character.position.x - this.character.position.x;
+        // const yDistAbs = Math.abs(weaponCollider.character.position.y - this.character.position.y);
+        // if (weaponCollider.character.flipped) {
+        //     if (xDist > 0 && xDist < DAMAGE_DISTANCE && yDistAbs < attackDistance) {
+        //         this.character.takeDamage(50);
+        //     }
+        // } else {
+        //     if (xDist < 0 && xDist > -DAMAGE_DISTANCE && yDistAbs < attackDistance) {
+        //         this.character.takeDamage(50);
+        //     }
+        // }
     }
 }

@@ -11,6 +11,7 @@ export default class ThoughBubble {
     render(ctx) {
         ctx.save();
         let alpha = 1;
+
         if (this.timeout > TIMEOUT - FADE_DURATION) {
             alpha = (TIMEOUT - this.timeout) * (1 / FADE_DURATION);
         } else if (this.timeout < FADE_DURATION) {
